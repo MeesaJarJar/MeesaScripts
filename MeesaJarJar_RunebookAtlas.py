@@ -2,8 +2,8 @@
 # Meesa Rune Atlas - Easy, automated traveling by recalling or gating used exclusively 
 # with the Lincoln Mallmorial Rune Library on the UOForever Server.
 
-# You MUST have MeesaAtlas*.pkl file in your Scripts folder alongside this script.
-# You MUST have the script added to the Scripting -> Python tab of Razor Enhanced
+# You MUST have MeesaJarJar_RunebookAtlas.pkl file in your Scripts folder alongside this script.
+# You MUST have the two .PY Files added to the Scripting -> Python tab of Razor Enhanced
 # You MUST have the “Meesa Runebook”, given to you by Meesa Jar Jar ingame, and it must remain in your mainbackpack(not a subcontainer), untouched with exception of adding your “home” rune, named “home”, to the book.
 # OR -- 
 # At the front of Lincoln Mallmorial (One Screen East of Brit Moongate) there is a Red booked called Meesa LM Runebook
@@ -15,10 +15,10 @@
 #Your character will automatically move to the selected Runebook,open it, and select the correct rune for you!
 
 #If you are not at Lincoln Mallmorial, you will automatically be recalled or gated back to the library and then to your selected destination. 
-
+#Special Thanks to Wisps/Nebu & Juggz for Code Contributions, and the PWN Guild for testing for me!
 #CONFIG ----------------------------------
 atlasVersion = 427
-scriptVersion = 05152024.01
+scriptVersion = 6042024
 
 #END CONFIG ------------------------------
 
@@ -289,6 +289,7 @@ class Atlas:
                     else:
                         print("GATE NOT FOUND")
             closeRunebook()
+            
     def filter_books_by_search(self, search_string):
         search_lower = search_string.lower()
         filtered_books = []
@@ -4113,7 +4114,7 @@ Meesa also given` <BASEFONT color=#0EC23E size=7> muy muy big thanks to Aegwyn, 
                             Gumps.AddLabelCropped(gd, 275, 30 + idx * int(rowHeight / 1.75), 128, 10, 0, str(sublist_item))
                             Gumps.AddTooltip(gd,1061114,str(sublist_item))
                             Gumps.AddButton(gd, 250, 30 + idx * int(rowHeight / 1.75), 5601, 5605, 5000 + idx, 1, 0)
-                        
+                            Gumps.AddTooltip(gd,1061114,str(sublist_item))
                         county = county + 1 
                 else:
                     Gumps.AddButton(gd, 15,  4 + (count * rowHeight), 4005, 4006, book["serial"], 1, 0)
@@ -4280,10 +4281,14 @@ Meesa also given` <BASEFONT color=#0EC23E size=7> muy muy big thanks to Aegwyn, 
             Gumps.AddTooltip(gd,1061114,str("Toggle Background Transparency"))  
             
 
+            
+        Gumps.AddButton(gd,163,250,1619,1619,8009,1,0)
+        Gumps.AddTooltip(gd,1061114,str("Sextant XY Coordinate Converter"))  
+            
         Gumps.AddLabel(gd,290,440,2033,"Created by Meesa Jar Jar")        
         Gumps.AddLabel(gd,310,450,2035,"Peace & Love!")     
         
-        Gumps.AddLabel(gd, 0, 440, 2037, "Script V:" + str(round(scriptVersion * 100, 2)))
+        #Gumps.AddLabel(gd, 0, 440, 2037, "Script V:" + str(scriptVersion))
         
         offsetDinoDNAX = 380
         offsetDinoDNAY = 250
@@ -4295,7 +4300,7 @@ Meesa also given` <BASEFONT color=#0EC23E size=7> muy muy big thanks to Aegwyn, 
             Gumps.AddImage(gd,int(loc[0] + offsetDinoDNAX),int(loc[1]+ offsetDinoDNAY),6000, loc[2])
             
         Gumps.AddButton(gd,185,217,5608,5609,48,1,0)
-        
+        Gumps.AddTooltip(gd,1061114,str("Meesa Clicky Map"))
         Gumps.AddLabel(gd,390,365,1152,"DinoDNA")
         if minimized:
             try:
@@ -4393,7 +4398,7 @@ lmrsafeloc = [1396,1964,7]
 
 atlas = Atlas()
 
-atlas = load_atlas("./RazorEnhanced/Scripts/MeesaAtlas" + str(atlasVersion) + ".pkl")
+atlas = load_atlas("./RazorEnhanced/Scripts/MeesaJarJar_RunebookAtlas.pkl")
 
 
 if atlas is not None:
@@ -4456,8 +4461,13 @@ while True:
             gd.buttonid = -1
             updateGump()    
            
-
-        if gd.buttonid > 7999 and gd.buttonid < 9000:
+        if gd.buttonid == 8009:
+            if Misc.ScriptStatus("MeesaJarJar_RuneBookAtlas_Sextant.py") == False:
+                Misc.ScriptRun("MeesaJarJar_RuneBookAtlas_Sextant.py")
+            print("Starting Runebook Atlas Sextant")
+            gd.buttonid = -1   
+            updateGump() 
+        elif gd.buttonid > 7999 and gd.buttonid < 9000:
             
             Journal.Clear()
             ind = gd.buttonid - 8000
