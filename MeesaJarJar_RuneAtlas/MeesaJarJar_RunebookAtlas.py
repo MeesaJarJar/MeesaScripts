@@ -4284,10 +4284,21 @@ Meesa also given` <BASEFONT color=#0EC23E size=7> muy muy big thanks to Aegwyn, 
             Gumps.AddTooltip(gd,1061114,str("Toggle Background Transparency"))  
             
 
+        Gumps.AddImage(gd,200,305,22050)
+        
+        
+        Gumps.AddBackground(gd,203,342,35,30,410)
+        Gumps.AddButton(gd,202,308,1691,1692,8009,1,0)
 
-        Gumps.AddButton(gd,163,250,1619,1619,8009,1,0)
         Gumps.AddTooltip(gd,1061114,str("Sextant XY Coordinate Converter"))  
-        Gumps.AddButton(gd,200,350,22050,22052,8008,1,0)    
+        
+        
+        
+        Gumps.AddLabel(gd,210,342,1152,"MIB")
+        Gumps.AddLabel(gd,207,355,1152,"X/Y")
+        
+        Gumps.AddButton(gd,180,375,2515,2515,8008,1,0)   
+        
         Gumps.AddTooltip(gd,1061114,str("UPDATE FROM GITHUB")) 
         Gumps.AddLabel(gd,290,440,2033,"Created by Meesa Jar Jar")        
         Gumps.AddLabel(gd,310,450,2035,"Peace & Love!")     
