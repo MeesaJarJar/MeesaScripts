@@ -4292,11 +4292,10 @@ Meesa also given` <BASEFONT color=#0EC23E size=7> muy muy big thanks to Aegwyn, 
 
         Gumps.AddTooltip(gd,1061114,str("Sextant XY Coordinate Converter"))  
         
-        
-        
         Gumps.AddLabel(gd,210,342,1152,"MIB")
         Gumps.AddLabel(gd,207,355,1152,"X/Y")
         
+        Gumps.AddBackground(gd,175,372,98,30,1755)
         Gumps.AddButton(gd,180,375,2515,2515,8008,1,0)   
         
         Gumps.AddTooltip(gd,1061114,str("UPDATE FROM GITHUB")) 
