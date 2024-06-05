@@ -41,5 +41,4 @@ del /f /q %zip_file%
 rd /s /q %extract_dir%
 
 echo Update complete.
-pause
 endlocal
