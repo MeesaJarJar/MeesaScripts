@@ -29,10 +29,10 @@ import os
 import System
 import pickle
 import math
-
+os.chdir("C:/Program Files (x86)/UOForever/UO/Forever")
 clr.AddReference('System')
 from System.Diagnostics import Process, ProcessStartInfo
-
+from subprocess import Popen
 clr.AddReference("System.Drawing")
 from System.Collections.Generic import List
 from System import Int32 as int
@@ -4284,10 +4284,11 @@ Meesa also given` <BASEFONT color=#0EC23E size=7> muy muy big thanks to Aegwyn, 
             Gumps.AddTooltip(gd,1061114,str("Toggle Background Transparency"))  
             
 
-            
+
         Gumps.AddButton(gd,163,250,1619,1619,8009,1,0)
         Gumps.AddTooltip(gd,1061114,str("Sextant XY Coordinate Converter"))  
-            
+        Gumps.AddButton(gd,200,350,22050,22052,8008,1,0)    
+        Gumps.AddTooltip(gd,1061114,str("UPDATE FROM GITHUB")) 
         Gumps.AddLabel(gd,290,440,2033,"Created by Meesa Jar Jar")        
         Gumps.AddLabel(gd,310,450,2035,"Peace & Love!")     
         
@@ -4383,22 +4384,21 @@ def save_atlas(atlas, filename):
     print(f"Atlas saved to {filename}")
 
 def updateAllScripts():
-    
+    # Print the current working directory
+    print("Current working directory:", os.getcwd())
 
     # Path to your .bat file
     bat_file_path = "./RazorEnhanced/Scripts/YousaPlaceThisFileInYourScriptsFolderAndDoubleClickItForMeesaScripts.bat"
 
-    # Create a new process start info
-    start_info = ProcessStartInfo(bat_file_path)
-    start_info.UseShellExecute = True
+    # Ensure the path is correct
+    bat_file_path = os.path.abspath(bat_file_path)
+    print("Absolute path to .bat file:", bat_file_path)
 
     # Start the process
-    process = Process.Start(start_info)
+    process = Popen(bat_file_path, shell=True)
 
     # Optionally, wait for the process to complete
-    process.WaitForExit()
-
-
+    #process.wait()
 
 if gumpid in Gumps.AllGumpIDs():
     print("Found the gump open, closing it!")
@@ -4485,6 +4485,14 @@ while True:
             if Misc.ScriptStatus("MeesaJarJar_RuneBookAtlas_Sextant.py") == False:
                 Misc.ScriptRun("MeesaJarJar_RuneBookAtlas_Sextant.py")
             print("Starting Runebook Atlas Sextant")
+            gd.buttonid = -1   
+            updateGump() 
+            
+        elif gd.buttonid == 8008:
+            Player.HeadMessage(0,"UPDATING ALL SCRIPTS FROM GITHUB")
+            print("UPDATING ALL SCRIPTS FROM GITHUB")
+            updateAllScripts()
+            
             gd.buttonid = -1   
             updateGump() 
         elif gd.buttonid > 7999 and gd.buttonid < 9000:
