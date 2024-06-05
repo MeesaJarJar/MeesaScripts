@@ -4393,23 +4393,6 @@ def save_atlas(atlas, filename):
         pickle.dump(atlas, f)
     print(f"Atlas saved to {filename}")
 
-def updateAllScripts():
-    # Print the current working directory
-    print("Current working directory:", os.getcwd())
-
-    # Path to your .bat file
-    bat_file_path = "./RazorEnhanced/Scripts/YousaPlaceThisFileInYourScriptsFolderAndDoubleClickItForMeesaScripts.bat"
-
-    # Ensure the path is correct
-    bat_file_path = os.path.abspath(bat_file_path)
-    print("Absolute path to .bat file:", bat_file_path)
-
-    # Start the process
-    process = Popen(bat_file_path, shell=True)
-
-    # Optionally, wait for the process to complete
-    #process.wait()
-
 if gumpid in Gumps.AllGumpIDs():
     print("Found the gump open, closing it!")
     Gumps.CloseGump(gumpid)
@@ -4499,10 +4482,11 @@ while True:
             updateGump() 
             
         elif gd.buttonid == 8008:
-            Player.HeadMessage(0,"UPDATING ALL SCRIPTS FROM GITHUB")
             print("UPDATING ALL SCRIPTS FROM GITHUB")
-            updateAllScripts()
-            
+            Player.HeadMessage(0,"UPDATING ALL SCRIPTS FROM GITHUB")
+            if Misc.ScriptStatus("MeesaJarJar_RuneBookAtlas_UpdateAll.py") == False:
+                Misc.ScriptRun("MeesaJarJar_RuneBookAtlas_UpdateAll.py")
+                
             gd.buttonid = -1   
             updateGump() 
         elif gd.buttonid > 7999 and gd.buttonid < 9000:
