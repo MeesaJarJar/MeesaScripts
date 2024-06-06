@@ -104,8 +104,8 @@ class ImageForm(Form):
         x = int(event.X / self.scale)
         y = int(event.Y / self.scale)
 
+  
         self.DrawCircle(int(x * self.scale), int(y * self.scale), 'red')  
-
         nearest_location = self.find_nearest_location(int(x), int(y))
 
         location_x, location_y = nearest_location
@@ -191,6 +191,7 @@ class ImageForm(Form):
             pen = Pen(Color.Gray, 2)  
 
         g = Graphics.FromImage(self.image)
+        
         g.DrawEllipse(pen, x - radius, y - radius, radius * 2, radius * 2)
         g.Dispose()
         self.pictureBox.Image = self.image

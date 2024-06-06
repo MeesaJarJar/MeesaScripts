@@ -3993,7 +3993,9 @@ def updateGump():
         Gumps.AddLabel(gd,40+offsetX,106+offsetY,1152,"Rune")
         
         Gumps.AddLabel(gd,39+offsetX,119+offsetY,1152,"Atlas")
-
+        Gumps.AddAlphaRegion(gd,150,210+offsetY,150,20)
+        Gumps.AddLabel(gd,152,210+offsetY,2497,"github.com/meesajarjar/")
+        
         for loc in dinodnaimage:
             Gumps.AddImage(gd,int(loc[0] + offsetDinoDNAX),int(loc[1]+ offsetDinoDNAY),6000, loc[2])
             
