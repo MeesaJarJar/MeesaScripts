@@ -4458,6 +4458,7 @@ while True:
             selected_serial = gd.buttonid
             atlas.select_book_by_serial(selected_serial)
             gd.buttonid = -1
+            toggle_gump_state()
             updateGump()
             
         if gd.buttonid < 10000 and gd.buttonid >= 9000:
@@ -4480,7 +4481,8 @@ while True:
             if Misc.ScriptStatus("MeesaJarJar_RuneBookAtlas_Sextant.py") == False:
                 Misc.ScriptRun("MeesaJarJar_RuneBookAtlas_Sextant.py")
             print("Starting Runebook Atlas Sextant")
-            gd.buttonid = -1   
+            gd.buttonid = -1  
+            toggle_gump_state() 
             updateGump() 
             
         elif gd.buttonid == 8008:
@@ -4490,7 +4492,9 @@ while True:
                 Misc.ScriptRun("MeesaJarJar_RuneBookAtlas_UpdateAll.py")
                 
             gd.buttonid = -1   
+            toggle_gump_state()
             updateGump() 
+            
         elif gd.buttonid > 7999 and gd.buttonid < 9000:
             
             Journal.Clear()
@@ -4520,7 +4524,9 @@ while True:
                 atlas.recallMeesaLMRunebook(6)
                         
             gd.buttonid = -1
+            toggle_gump_state()
             updateGump()   
+            
             
         if gd.buttonid == 44:
             gd.buttonid = -1
@@ -4570,19 +4576,21 @@ while True:
             gd.buttonid = -1
             Journal.Clear()
             atlas.recallMeesaLMRunebook(0)
+            toggle_gump_state()
             updateGump()   
             
         if gd.buttonid == 302:
             gd.buttonid = -1
             Journal.Clear()
             atlas.recallMeesaLMRunebook(1)
+            toggle_gump_state()
             updateGump()  
             
         if gd.buttonid == 303:
             gd.buttonid = -1
             Journal.Clear()
             atlas.recallMeesaLMRunebook(atlas.homeRune)
-            
+            toggle_gump_state()
             updateGump()  
             
         if gd.buttonid == 304:
@@ -4615,3 +4623,4 @@ while True:
             print("Starting Runebook Atlas Map")
             gd.buttonid = -1   
             updateGump()  
+            toggle_gump_state()
