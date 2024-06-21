@@ -4413,7 +4413,7 @@ lmrsafeloc = [1396,1964,7]
 
 atlas = Atlas()
 
-atlas = load_atlas("./RazorEnhanced/Scripts/\MeesaJarJar_RuneAtlas/MeesaJarJar_RunebookAtlas.pkl")
+atlas = load_atlas("./RazorEnhanced/Scripts/MeesaJarJar_RuneAtlas/MeesaJarJar_RunebookAtlas.pkl")
 
 
 if atlas is not None:
