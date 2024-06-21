@@ -266,7 +266,7 @@ class ImageForm(Form):
         g = Graphics.FromImage(self.image)
         font = Font("Arial", 28)
         brush = SolidBrush(Color.Orange)
-        text = "MIB"
+        text = "MIB/TMap Location"
         text_position = Point(int(mib_x * self.scale - 50), int(mib_y * self.scale - 100))
         g.DrawString(text, font, brush, text_position)
         pen = Pen(Color.Orange, 2)
