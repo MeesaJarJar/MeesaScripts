@@ -212,7 +212,6 @@
 ### **MeesaJarJar_PirateAlerterGUMP.py**
 **Description:** Pirate Alerter - Checks the map at a location.
 
-![MeesaJarJar_RedAlertGUMP](images/MeesaJarJar_RedAlertGUMP.gif)
 ---
 
 ### **MeesaJarJar_PriceRunesForVendor.py**
@@ -223,6 +222,7 @@
 ### **MeesaJarJar_RedAlertGUMP.py**
 **Description:** Red Alert - GUMP - Displays a flashing alert when reds are detected by someone running the script via Chat Guild commands. It also sends the location and who the player saw to the guild. Resets to normal after a while.
 
+![MeesaJarJar_RedAlertGUMP](images/MeesaJarJar_RedAlertGUMP.gif)
 ---
 
 ### **MeesaJarJar_RunebookAtlas.py**
