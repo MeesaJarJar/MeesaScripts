@@ -339,6 +339,8 @@
 
 ![MeesaJarJar_VendorScanner_GUMP](images/MeesaJarJar_VendorScanner_GUMP.png)
 
+Below is how the "VendorMall.html" file looks on a simple webserver like XAMPP
+
 ![MeesaJarJar_VendorScanner_HTML](images/MeesaJarJar_VendorScanner_HTML.gif)
 ---
 

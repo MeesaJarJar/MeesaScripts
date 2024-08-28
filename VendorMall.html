@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meesa Jar Jars Sky Mall</title>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+.bottom-right-image-container {
+    position: relative;
+    display: inline-block; /* Ensure proper positioning of child elements */
+}
+
+.bottom-right-image {
+    position: absolute;
+    bottom: 125%;
+    right: 0%;
+    z-index: 1000000;
+    max-width: 35%;
+    user-select: none;
+    cursor: auto;
+    -webkit-user-drag: none;
+}
+
+.speechBubble {
+    position: absolute;
+    bottom: 200%;
+    left: 5%;
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    min-width: 50px; /* Set a minimum width */
+    min-height: 20px; /* Set a minimum height */
+    max-width: 200px;
+    box-sizing: border-box;
+    display: inline-block; /* Make the bubble inline-block */
+
+}
+
+.speechBubble::before {
+    content: "";
+    position: absolute;
+    top: 15px; /* Adjust as needed */
+    right: -35px; /* Adjust as needed */
+    width: 20px; /* Diameter of the circle */
+    height: 20px; /* Diameter of the circle */
+    background-color: #ffffff; /* White background color */
+    border: 2px solid #000000; /* Black border */
+    border-radius: 50%; /* Create a circle */
+    z-index: -1; /* Ensure it's behind the speech bubble */
+}
+  
+.resx {
+  //max-width: 30%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(76 175 80 / 95%);
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2), 0 2rem 4rem 0.25rem rgba(46, 43, 55, 0.575);
+  padding: 20px;
+  margin-bottom: 20px;
+  position: fixed;
+  max-height: 50vh;
+  overflow-y: auto;
+  z-index: 10001;
+  scrollbar-width: 32px;
+  scrollbar-color: #aaf5aa #ffffff;
+  outline: rgb(76, 175, 80) double thick;
+  cursor: grab;
+}
+  #container {
+    position: relative;
+	user-select: none;
+	cursor: grab;
+  }
+
+#resultbox table {
+  width: 100%;
+  user-select: none;
+  padding: 32px;
+  border-collapse: collapse;
+  box-shadow: 0 2rem 4rem 0.25rem rgba(46, 43, 55, 0.575);
+}
+
+#resultbox th, #resultbox td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+  user-select: none;
+}
+
+#resultbox tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+#resultbox th {
+  background-color: #4CAF50;
+  color: white;
+}
+
+  #game-area {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-color: #333;
+    overflow: hidden;
+  }
+
+  .floating-image {
+    position: absolute;
+    user-select: none;
+    transition: transform 0.3s ease-in-out;
+    border: 6px solid transparent;
+    border-radius: 10px;
+  }
+  
+.floating-image:hover {
+  pointer-events: auto;
+  user-select: none;
+  
+  touch-action: none;
+}
+  .enlarged-image {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: none;
+  }
+
+  .enlarged-image img {
+    width: 400px;
+    height: auto;
+    background-color: black;
+    border-radius: 10px;
+  }
+
+#search-container {
+    position: absolute;
+    left: 50%;
+    top: 80%;
+    text-align: center;
+    margin-top: 20px;
+    z-index: 10002;
+    background-color: #c51cffa6;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: grab;
+    width: 300px;
+    height: 50px;
+	outline: rgb(76, 175, 80) double thick;
+}
+
+
+  #searchInput {
+    min-width: 50%;
+    padding: 10px;
+	margin-top: 5px;
+    width: 30%;
+    z-index: 99999999999999;
+  }
+</style>
+</head>
+<body>
+<div id='mainbox'>
+
+<div id="game-area"></div>
+<div id="search-container">
+ <div class="speechBubble">
+        <p>Hey, Yousa! Meesa Jar Jar! Meesa Scrape Vendor Data when Meesa Play UO, so Yousa can shop Muy-Muy FUN! </p>
+    </div>
+<img src="MeesaJarJarWithRobe.png" alt="Meesa Jar Jar" class="bottom-right-image" id='jarjar'>
+
+   
+
+  <input type="text" id="searchInput" placeholder="Search Properties...">
+  <button onclick="filterImages()" style="padding: 10px;">Search</button>
+</div>
+<div class="enlarged-image" id="enlarged-image-container"></div>
+
+<div class="resx" id='resultbox'>
+<div class="searchfilter" id='searchfilterdiv'>
+<h1 style="color:white;background-color:#1613139e;padding:10px;border-radius:10px;"> | Hey, Yousa! |</h2>
+<p style="background-color:white;padding:10px;border-radius:5px;">Meesa so excited to tell yousa about meesa website! Oh, hello der, lovely people! Meesa Jar Jar, and meesa here to bringin' yousa somethin' muy muy special! Introducing... drumroll... meesa fantastical website where yousa can seein' what others are sellin' and clickin' on all the items yousa like! Oh yes, yousa heard it right!</p>
+
+<p style="background-color:white;padding:10px;border-radius:5px;">Listen here, yousa can just clicken' on any item yousa wanna be seein'! Meesa got the price, and meesa even got the vendor location for yousa! No more wandering around aimlessly, oh no! Just click, and yousa on your way to gettin' what yousa need, straight from the comfort of your home sweet home!</p>
+
+<p style="background-color:white;padding:10px;border-radius:5px;">And if yousa be lookin' for somethin' specific, don't yousa worry! Meesa got yousa covered with our handy-dandy search feature! Just type in what yousa lookin' for, and voila! Meesa findin' it for yousa faster than yousa can say "mesa like shopping!"</p>
+
+<p style="background-color:white;padding:10px;border-radius:5px;">So what are yousa waitin' for? Come on over to meesa website and start explorin' all the wonderful treasures waiting just for yousa! Trust meesa, yousa won't be disappointed! Thank yousa for listenin', and may the Force be with yousa on your shopping adventures!</p>
+<span id="closeResultBox" style="display:block;cursor:pointer;position:absolute;top:0;right:10px;margin:1%;padding:4px;background-color:#ffffffba;border-radius:8px;font-size:20px;font-weigh:10002;border:2px solid black;box-shadow:2px 2px 4px rgba(0,0,0,0.5);">X</span>
+
+</div>
+<script>
+let csvData = [];
+let currentSearchString = '';
+var searchContainer = document.getElementById('search-container');
+var resultContainer = document.getElementById('resultbox');
+var offsetX, offsetY, initialLeft, initialTop, isDragging = false;
+var windowDragged
+var JarJarPosition = JSON.parse(sessionStorage.getItem('JarJarPosition'));
+var resultPosition = JSON.parse(sessionStorage.getItem('resultPosition'));
+
+
+sessionStorage.setItem('resultPosition', JSON.stringify([1000,500]));	
+
+function handleMouseDown(e) {
+    console.log("MOUSE DOWN");
+    isDragging = true;
+    windowDragged = e.target.id;
+    const containerRect = e.target.getBoundingClientRect();
+    offsetX = e.clientX - containerRect.left;
+    offsetY = e.clientY - containerRect.top;
+    console.log("Initial X:", offsetX, "Initial Y:", offsetY);
+    console.log("Container Rect:", containerRect);
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+}
+
+function handleMouseMove(e) {
+    if (isDragging) {
+        console.log('windowDragged:', windowDragged);
+        const newX = e.clientX - offsetX;
+        const newY = e.clientY - offsetY;
+        console.log("New X:", newX, "New Y:", newY);
+
+        if (windowDragged == 'resultbox') {
+            resultContainer.style.left = newX + 'px';
+            resultContainer.style.top = newY + 'px';
+            sessionStorage.setItem('resultPosition', JSON.stringify([newX, newY]));
+        } else if (windowDragged == "search-container") {
+            searchContainer.style.left = newX + 'px';
+            searchContainer.style.top = newY + 'px';
+            sessionStorage.setItem('JarJarPosition', JSON.stringify([newX, newY]));
+        }
+    }
+}
+
+
+function handleMouseUp() {
+    isDragging = false;
+	windowDragged = false;
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleMouseUp);
+}
+
+searchContainer.addEventListener('mousedown', handleMouseDown);
+resultContainer.addEventListener('mousedown', handleMouseDown);
+  
+function filterImages() {
+	document.getElementById('resultbox').style.display = 'none';
+	currentSearchString = document.getElementById('searchInput').value.toLowerCase();
+	console.log("currentSearchString:", currentSearchString)
+	createFloatingImages(); 
+  // Select all floating images
+	const floatingImages = document.querySelectorAll('.floating-image');
+
+	// Loop through each floating image and add a mousedown event listener
+	floatingImages.forEach(image => {
+		image.addEventListener('mousedown', function(event) {
+			// Prevent default behavior (dragging) for the mousedown event
+			event.preventDefault();
+		});
+	});
+}
+
+
+function loadAndParseCSV() {
+  fetch('vendorsaleitemdata.csv')
+    .then(response => response.text())
+    .then(text => {
+      csvData = text.trim().split('\n').map(row => row.split('|'));
+      filterImages(); 
+    })
+    .catch(error => console.error('Error loading or parsing CSV data:', error));
+}
+
+loadAndParseCSV();
+function findRowsByFirstColumn(searchString) {
+  if (!Array.isArray(csvData) || !csvData.length) {
+    console.error('CSV data is not loaded or is empty.');
+    return [];
+  }
+  return csvData.filter(row => {
+    if (!Array.isArray(row) || !row.length) return false;
+    return row[0] === searchString;
+  });
+}
+selectedObject = null;
+
+function createFloatingImages() {
+  const gameArea = document.getElementById('game-area');
+  gameArea.innerHTML = '';
+  const uniqueItemIDs = new Set();
+  const filteredData = csvData.filter(row => row[2].toLowerCase().includes(currentSearchString));
+  filteredData.forEach(function(row) {
+    const itemID = row[0];
+    if (!uniqueItemIDs.has(itemID)) {
+      uniqueItemIDs.add(itemID);
+      const img = new Image();
+      img.src = `./UOItems/${itemID}_0.png`;
+      img.classList.add('floating-image');
+      
+img.addEventListener('click', function(event) {
+  const matchingRows = findRowsByFirstColumn(itemID);
+  
+  if (selectedObject) {
+    selectedObject.style.outline = '';
+    selectedObject.style.backgroundColor = '';
+    selectedObject = null;
+  }
+
+  if (matchingRows && matchingRows.length > 0) {
+    let tableHTML = "<table class='itemsTable'><tr><th>ItemID</th><th>Name</th><th>Properties</th><th>Price</th><th>Loc X</th><th>Loc Y</th><th>Vendor Name</th><th>Hue</th></tr>";
+    matchingRows.forEach(function(row) {
+      tableHTML += "<tr>";
+      row.forEach(function(cell, index) {
+        let htmlAdd = '';
+        if (index == 6) {
+          if (cell == '0') {
+            cell = 0x0000;
+          }
+          htmlAdd = '<td><img src="./UOItems/' + itemID + '_' + cell + '.png"></img><br>' + cell + '</td>';
+        } else if (index == 2) {
+          const priceMatch = cell.match(/\[Price: ([^\]]+)\]/);
+          if (priceMatch && priceMatch[1]) {
+            htmlAdd = '<td>' + cell + '</td>' + '<td style="left:50%;font-weight:bold; color: #ff9c00;"><img src="./goldicon.png"></img><div style="display: block;">' + priceMatch[1] + '</div></td>';
+          } else {
+            htmlAdd = '<td></td>';
+          }
+        } else {
+          htmlAdd = '<td>' + cell + '</td>';
+        }
+        tableHTML += htmlAdd;
+      });
+      tableHTML += "</tr>";
+    });
+    tableHTML += "</table>";
+    
+    const resultBox = document.getElementById('resultbox');
+    resultBox.style.display = 'block';
+    resultBox.innerHTML = '<span id="closeResultBox" style="display:block;cursor:pointer;position:absolute;top:0;right:10px;margin:1%;padding:4px;background-color:#ffffffba;border-radius:8px;font-size:20px;font-weight:bold;z-index:10002;border:2px solid black;box-shadow:2px 2px 4px rgba(0,0,0,0.5);">X</span>' + tableHTML;
+    
+    img.style.outline = 'thick double #4CAF50';
+    img.style.backgroundColor = '#ffffffba';
+    selectedObject = img;
+  }
+  event.stopPropagation();
+});
+
+
+      gameArea.appendChild(img);
+      positionImage(img); 
+    }
+  });
+}
+
+
+function positionImage(img) {
+  img.onload = function() {
+    let positionFound = false;
+    let attempts = 0;
+    while (!positionFound && attempts < 100) {
+      positionFound = true;
+      const proposedLeft = Math.random() * (window.innerWidth - img.width);
+      const proposedTop = Math.random() * (window.innerHeight - img.height);
+      const existingImages = document.querySelectorAll('.floating-image:not(:last-child)');
+      for (let i = 0; i < existingImages.length; i++) {
+        const existingImg = existingImages[i];
+        const existingLeft = parseFloat(existingImg.style.left);
+        const existingTop = parseFloat(existingImg.style.top);
+        if (Math.abs(proposedLeft - existingLeft) < 4 + (img.width * 0.75) && Math.abs(proposedTop - existingTop) < 4 + (img.height * 0.75)) {
+          positionFound = false;
+          break;
+        }
+      }
+      if (positionFound) {
+        img.style.left = `${proposedLeft}px`;
+        img.style.top = `${proposedTop}px`;
+      }
+      attempts++;
+    }
+    if (!positionFound) {
+      console.log('Could not find a suitable position for image:', img.src);
+    }
+  };
+}
+
+
+
+function isOverlapping(element, otherElements) {
+  const rect1 = element.getBoundingClientRect();
+  for (let i = 0; i < otherElements.length; i++) {
+    const rect2 = otherElements[i].getBoundingClientRect();
+    if (!(rect1.right < rect2.left || rect1.left > rect2.right || rect1.bottom < rect2.top || rect1.top > rect2.bottom)) {
+      return true; 
+    }
+  }
+  return false; 
+}
+  function distance(x1, y1, x2, y2) {
+    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+  }
+
+  document.addEventListener('mousemove', function(event) {
+    const mouseX = event.clientX;
+    const mouseY = event.clientY;
+
+    let closestImg = null;
+    let closestDist = Infinity;
+
+    const images = document.querySelectorAll('.floating-image');
+    images.forEach(function(img) {
+      const imgX = parseInt(img.style.left) + img.width / 2;
+      const imgY = parseInt(img.style.top) + img.height / 2;
+      const dist = distance(mouseX, mouseY, imgX, imgY);
+
+      if (dist < 20) {
+        const scale = 4 - dist / 50; 
+        img.style.transform = `scale(${scale})`;
+
+        if (dist < closestDist) {
+          closestImg = img;
+          closestDist = dist;
+        }
+      } else {
+        img.style.transform = 'scale(1)';
+      }
+    });
+
+    if (closestImg) {
+      closestImg.style.zIndex = 999; 
+    }
+
+
+    images.forEach(function(img) {
+      if (img !== closestImg) {
+        img.style.zIndex = 0;
+      }
+    });
+  });
+
+document.getElementById('resultbox').addEventListener('click', function(event) {
+  if (event.target.id === 'closeResultBox') {
+    console.log('X button clicked');
+    document.getElementById('resultbox').style.display = 'none';
+  }
+});
+
+
+if (JarJarPosition){
+	console.log("FOUND SEARCH X AND Y");
+	console.log(JarJarPosition);
+	searchContainer.style.left = JarJarPosition[0] + 'px';
+	searchContainer.style.top = JarJarPosition[1] + 'px';
+	
+}
+if (resultPosition){
+	console.log("FOUND RESULT X AND Y");
+	console.log(resultPosition);
+	resultContainer.style.left = resultPosition[0] + 'px';
+	resultContainer.style.top = resultPosition[1] + 'px';
+	
+}
+
+</script>
+</body>
+</html>
