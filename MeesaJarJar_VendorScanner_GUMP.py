@@ -310,12 +310,12 @@ def track(number):
      
 def run_logging_start():
     Player.HeadMessage(0,'STARTING VENDOR LOGGING')
-    Misc.ScriptRun("MeesaJarJar_Vendor_Scanner.py")
+    Misc.ScriptRun("MeesaJarJar_VendorScanner.py")
 
 def run_logging_stop():
     Player.HeadMessage(0,'STOPPING VENDOR LOGGING')
-    if Misc.ScriptStatus("MeesaJarJar_Vendor_Scanner.py"):
-        Misc.ScriptStop("MeesaJarJar_Vendor_Scanner.py")
+    if Misc.ScriptStatus("MeesaJarJar_VendorScanner.py"):
+        Misc.ScriptStop("MeesaJarJar_VendorScanner.py")
     
 current_directory = os.getcwd()
 print(f"The script is running in: {current_directory}")
