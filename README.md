@@ -169,7 +169,7 @@
 ### **MeesaJarJar_JournalGUMP.py**
 **Description:** Journal Filtering System. Filter Journal Types and Other Options, in a resizable gump.
 
-![MeesaJarJar_JournalGUMP](images/MeesaJarJar_JournalGUMP.png)
+![MeesaJarJar_JournalGUMP](images/MeesaJarJar_JournalGUMP.gif)
 ---
 
 ### **MeesaJarJar_LiveAuctionBidTracker.py**
