@@ -23,12 +23,12 @@
 
 ### **MeesaJarJar_AutoShipGUMP.py**
 **Description:** This is a simple GUMP for ships. It has most features.
-
+![MeesaJarJar_AutoShipGUMP](images/MeesaJarJar_AutoShipGUMP.png)
 ---
 
 ### **MeesaJarJar_CircleHUDGUMP.py**
 **Description:** A Circle HUD that is meant to be displayed around the player. Shows the player's health, poison status, and includes a simple counter for selected inventory items. Simply start the script, select items you want displayed, and hit ESC to stop selecting. You will have to adjust the X and Y in the CONFIG to center it on your player.
-
+![MeesaJarJar_CircleHUDGUMP-0](images/MeesaJarJar_CircleHUDGUMP-0.png)
 ---
 
 ### **MeesaJarJar_CorpseAutoAppraiser.py**
@@ -113,7 +113,7 @@
 
 ### **MeesaJarJar_GuessMeesaNumberGUMP.py**
 **Description:** Number Guessing Game - Fun! A random number between 0 and 100 is chosen (including 0 and 100). Whoever guesses the number first wins! Numbers can only be in the numerical format like 33 instead of thirty-three. Simple GUMP with buttons to help manage the game. Auto announces when a winner guesses the number first!
-
+![MeesaJarJar_GuessMeesaNumberGUMP](images/MeesaJarJar_GuessMeesaNumberGUMP.gif)
 ---
 
 ### **MeesaJarJar_GuildGaterConcierge.py**
@@ -123,7 +123,7 @@
 
 ### **MeesaJarJar_HealthBarHelperGUMP.py**
 **Description:** Displays GUMP with the Health Bars, and Poison / Death / Hurt / Out of Range of players around the user. Heal, Cure, Rez players. Displays guildmates as well as others.
-
+![MeesaJarJar_HealthBarHelperGUMP](images/MeesaJarJar_HealthBarHelperGUMP.gif)
 ---
 
 ### **MeesaJarJar_IDOCRecaller.py**
@@ -148,7 +148,7 @@
 
 ### **MeesaJarJar_ItemDyerGUMP.py**
 **Description:** GUMP for dying stuff I guess? I don’t remember writing this script at all...
-
+![MeesaJarJar_ItemDyerGUMP](images/MeesaJarJar_ItemDyerGUMP.gif)
 ---
 
 ### **MeesaJarJar_ItemIDWholeContainer.py**
@@ -178,7 +178,7 @@
 
 ### **MeesaJarJar_MIBSailer.py**
 **Description:** MIB Sailer GUMP using A* Pathfinding for Sailing. Work in progress script, running into issues with custom islands.
-
+![MeesaJarJar_MIBSailer](images/MeesaJarJar_MIBSailer.png)
 ---
 
 ### **MeesaJarJar_MobileLogger.py**
@@ -208,7 +208,7 @@
 
 ### **MeesaJarJar_PirateAlerterGUMP.py**
 **Description:** Pirate Alerter - Checks the map at a location.
-
+![MeesaJarJar_RedAlertGUMP](images/MeesaJarJar_RedAlertGUMP.gif)
 ---
 
 ### **MeesaJarJar_PriceRunesForVendor.py**
@@ -223,7 +223,7 @@
 
 ### **MeesaJarJar_RunebookAtlas.py**
 **Description:** Meesa Rune Atlas. Easy, automated traveling by recalling or gating used exclusively with the Lincoln Mallmorial Rune Library on the UOForever Server. You MUST have `MeesaAtlas*.pkl` file in your Scripts folder alongside this script. You MUST have the script added to the Scripting -> Python tab of Razor Enhanced. You MUST have the “Meesa Runebook”, given to you by Meesa Jar Jar ingame, and it must remain in your main backpack (not a subcontainer), untouched except for adding your “home” rune, named “home”, to the book. OR -- At the front of Lincoln Mallmorial (One Screen East of Brit Moongate) there is a Red booked called Meesa LM Runebook. You may create a copy of this book using a Runebook Copy Pen or Manually make the book yourself. Your runes in a created book must be an EXACT MATCH to the runebook at LM for this to work, down to the color. Simply search for a location, book name, or mob type, and then select a location to travel to! Your character will automatically move to the selected Runebook, open it, and select the correct rune for you! If you are not at Lincoln Mallmorial, you will automatically be recalled or gated back to the library and then to your selected destination.
-
+![MeesaJarJar_RunebookAtlas](images/MeesaJarJar_RunebookAtlas.gif)
 ---
 
 ### **MeesaJarJar_RuneBookAtlas_Map.py**
@@ -233,7 +233,7 @@
 
 ### **MeesaJarJar_RuneBookAtlas_Sextant.py**
 **Description:** Sextant that converts XY coordinates to and from in-game Sextant Coordinates. Not perfectly accurate, but good. There is a MIB function that allows you to select a MIB or TMAP and it will then display it on the clickable `MeesaJarJar_RuneBookAtlas_Map`.
-
+![MeesaJarJar_RuneBookAtlas_Sextant-0](images/MeesaJarJar_RuneBookAtlas_Sextant-0.png)
 ---
 
 ### **MeesaJarJar_RuneBookAtlas_UpdateAll.py**
@@ -253,7 +253,7 @@
 
 ### **MeesaJarJar_RunicCrafterGUMP.py**
 **Description:** Pull Runes for Specific Slayer Types and Imbue Items with ease! Simply set your reliquary and crystal workbench serials in the config and start! Special Thanks to Wisps/Nebu & Juggz for Code Contributions, and the PWN Guild for testing for me!
-
+![MeesaJarJar_RunicCrafterGUMP](images/MeesaJarJar_RunicCrafterGUMP.gif)
 ---
 
 ### **MeesaJarJar_SayRandomDialogue.py**
@@ -298,17 +298,17 @@
 
 ### **MeesaJarJar_TreasureMapNLootGUMP.py**
 **Description:** Treasure Map N Loot - GUMP. Simple GUMP that allows the user to go through the various stages of unlocking and processing a Treasure Map Chest. Uses Lockpicking, and Remove Trap, along with Item ID or Wand. Obviously always remove your Tmap Chest for the next person. It automatically gives you a rough minimum value of the items in the chest, so you can see what items are worth taking.
-
+![MeesaJarJar_TreasureMapNLootGUMP](images/MeesaJarJar_TreasureMapNLootGUMP.gif)
 ---
 
 ### **MeesaJarJar_TriviaGUMP.py**
 **Description:** Trivia Manager for Trivia on UOForever. Made this as a Mini Game for the Auction on UOF. Questions saved in the CSV file in the following format: `Number, Question, Answer, Asked`.
-
+![MeesaJarJar_TriviaGUMP](images/MeesaJarJar_TriviaGUMP.png)
 ---
 
 ### **MeesaJarJar_UOFWikiGPTGUMP.py**
 **Description:** UOF Trained AI Chat Bot. Trained off of WIKI Data 7/10/2024 for UOForever Server. This was just a proof of concept. It will not work for you unless you replace the API key with your own OpenAI Pro Key. This was only to demonstrate how GPT could be leveraged with trained data to provide user answers to questions, among other interesting concepts. This will not work unless you also have a simple web server to run a PHP script to call the custom GPT that was created. I believe I posted what is needed in the Razor Enhanced Discord server if you are interested.
-
+![MeesaJarJar_UOFWikiGPTGUMP](images/MeesaJarJar_UOFWikiGPTGUMP.gif)
 ---
 
 ### **MeesaJarJar_UseItemIDWand.py**
@@ -323,7 +323,8 @@
 
 ### **MeesaJarJar_VendorScanner_GUMP.py**
 **Description:** This script works in conjunction with `MeesaJarJar Vendor Scanner`. Only this script needs to be run. You may set your Razor Enhanced for this script to AutoStart at Login. The GUMP starts minimized. Click the green arrow next to Vendor Search to open it.
-
+![MeesaJarJar_VendorScanner_GUMP](images/MeesaJarJar_VendorScanner_GUMP.png)
+![MeesaJarJar_VendorScanner_HTML](images/MeesaJarJar_VendorScanner_HTML.gif)
 ---
 
 ### **MeesaJarJar_WanderBritAndTalk.py**
