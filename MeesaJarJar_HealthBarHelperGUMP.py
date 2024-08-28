@@ -59,8 +59,8 @@ def updateGump():
 
     Gumps.AddImage(gd, 20, 110, 31)
 
-    if len(filteredMobiles) >= 1:
-        Gumps.AddBackground(gd, len(filteredMobiles) * widthOffset + 50, 110, 34, 30, 31)
+    #if len(filteredMobiles) >= 1:
+        #Gumps.AddBackground(gd, len(filteredMobiles) * widthOffset + 50, 110, 34, 30, 31)
 
     healthUnitHeight = 1
     buttonOffsetY = 50

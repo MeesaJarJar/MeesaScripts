@@ -221,7 +221,7 @@ def updateGump():
             Gumps.AddImage(gd,190,-5,10602)
             Gumps.AddLabel(gd,160,0,0,"Show Chat")
             Gumps.AddButton(gd,235,0,5606,5606,4,1,0)               
-            
+    Gumps.CloseGump(gumpNumber)        
     Gumps.SendGump(gumpNumber, Player.Serial, 0, 0, gd.gumpDefinition, gd.gumpStrings)
        
 updateGump()
@@ -271,7 +271,8 @@ while True:
                     
                 else:
                     filterChatTypesAdditional[chat_types_additional[gd.buttonid - 1000 - len(filterChatTypes)]] = True
-                
+
+        Gumps.CloseGump(gumpNumber)        
         Gumps.SendGump(gumpNumber, Player.Serial, 0, 0, gd.gumpDefinition, gd.gumpStrings)     
         updateGump()
         getJournalFiltered()
