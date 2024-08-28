@@ -337,9 +337,9 @@
 ### **MeesaJarJar_VendorScanner_GUMP.py**
 **Description:** This script works in conjunction with `MeesaJarJar Vendor Scanner`. Only this script needs to be run. You may set your Razor Enhanced for this script to AutoStart at Login. The GUMP starts minimized. Click the green arrow next to Vendor Search to open it.
 
-![MeesaJarJar_VendorScanner_GUMP](images/MeesaJarJar_VendorScanner_GUMP.png)
+![MeesaJarJar_VendorScanner_GUMP](images/MeesaJarJar_VendorScanner_GUMP.gif)
 
-Below is how the "VendorMall.html" file looks on a simple webserver like XAMPP
+**Image: ** Below is how the `VendorMall.html` file looks on a simple webserver like XAMPP
 
 ![MeesaJarJar_VendorScanner_HTML](images/MeesaJarJar_VendorScanner_HTML.gif)
 ---
