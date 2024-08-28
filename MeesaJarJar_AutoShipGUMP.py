@@ -2,9 +2,9 @@
 # BabyBro / MeesaJarJar on Discord - Peace & Love! -------------#
 # -------------------------------------------------------------#
 # Description: This is a simple GUMP for ships. It has most if 
-not all of the basic functions as original Razor CE. Script star
-ts Minimized, and has all boat commands including an 
-`Auto Target and Fire` option to make naval warfare a bit easier 
+# not all of the basic functions as original Razor CE. Script star
+# ts Minimized, and has all boat commands including an 
+# `Auto Target and Fire` option to make naval warfare a bit easier 
 # -------------------------------------------------------------#
 # START CONFIG ------------------------------------------------#
 
