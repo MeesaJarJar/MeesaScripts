@@ -7,6 +7,7 @@
 # -------------------------------------------------------------#
 # START CONFIG ------------------------------------------------#
 
+# Not really workable yet, this was an early script I never finished since I dont steal haha
 badNames     = ['sapphire','runebook','scissors',"newbied","blessed","arrow",'potion','clean bandage','scribe', 'tongs', 'ethereal', 'tool kit', 'sewing kit', 'fletching', 'nightshade', 'ginseng','garlic','black pearl','blood moss', 'sulfour', 'mandrake root','froe','skullcap','empty bottle']
 rareNames = ['power','vanquishing']
 slayerNames = ['Silver','Reptilian Death','Elemental Ban','Repond','Exorcism','Arachnid Doom','Fey Slayer',
@@ -16,7 +17,7 @@ slayerNames = ['Silver','Reptilian Death','Elemental Ban','Repond','Exorcism','A
 from System.Collections.Generic import List
 from System import Int32 as int
 from System import Byte
-
+import os
 gumpItems = []
 stealItem    = None;
 targetMobile = None;
@@ -26,19 +27,29 @@ badTypes = []
 def updateBadTypesList():
     global badTypes
     badTypes = []
-    with open(r'C:\Program Files (x86)\UOForever\UO\Forever\Data\Client\stolen_hidden_types.txt', 'r') as file:
-        for line in file:
-            badTypes.append(line.strip());
-    file.close()
 
+    file_path = r'C:\Program Files (x86)\UOForever\UO\Forever\Data\Client\stolen_hidden_types.txt'
+
+    if not os.path.exists(file_path):
+        with open(file_path, 'w') as file:
+            pass  # Creates an empty file
+
+    with open(file_path, 'r') as file:
+        for line in file:
+            badTypes.append(line.strip())
 def hideType(itemType):
     global badTypes
     
     file_path = r'C:\Program Files (x86)\UOForever\UO\Forever\Data\Client\stolen_hidden_types.txt'
+
+    if not os.path.exists(file_path):
+        with open(file_path, 'w') as file:
+            pass  # Creates an empty file
+
     with open(file_path, 'r') as file:
         lines = file.readlines()
 
-    line_exists = any(line.strip() == (str(itemType)) for line in lines)
+    line_exists = any(line.strip() == str(itemType) for line in lines)
 
     if not line_exists:
         with open(file_path, 'a') as file:
@@ -46,10 +57,6 @@ def hideType(itemType):
             print("Line added successfully.")
     else:
         print("Line already exists in the file.")
-        
-    #updateGump()
-    
-
     
 def updateGump():
     global gumpItems
