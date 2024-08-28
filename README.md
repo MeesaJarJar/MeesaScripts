@@ -79,11 +79,6 @@
 
 ---
 
-### **MeesaJarJar_DragonScaleArmorGUMP.py**
-**Description:** Meesa Dragon Armor Crafting Gump. ToolTips must be enabled and must have a beetle.
-
----
-
 ### **MeesaJarJar_DropAllGold.py**
 **Description:** Drop All Meesa Gold Stacks - Loops through all gold stacks in the player's main backpack. Tries to drop the gold at a random 1 tile away position. This is because several servers do not allow placing objects on a tile that a mobile is on top of.
 
