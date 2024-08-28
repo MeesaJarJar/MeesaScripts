@@ -77,22 +77,22 @@ def updateGump():
 
         Gumps.AddBackground(gd, offsetX + (index * widthOffset) + 5, buttonOffsetY + 85, 36, 120, 420)
 
-        if mobile.Poisoned:
+        if mobile.IsGhost:
+            # Ghost condition should take priority
+            addHealthBar(gd, index, mobile, offsetX, widthOffset, healthBarOffsetY, healthUnitHeight, GHOST)
+            addButton(gd, index, offsetX, widthOffset, buttonOffsetY, 2298, inRange)  # Resurrect icon
+        elif mobile.Poisoned:
+            # Poisoned condition should be checked next
             addHealthBar(gd, index, mobile, offsetX, widthOffset, healthBarOffsetY, healthUnitHeight, POISONED)
             addButton(gd, index, offsetX, widthOffset, buttonOffsetY, 2250, inRange)  # Cure icon
-            addTriToggleImage(gd, index, offsetX, widthOffset, buttonOffsetY, triToggle)
-            triToggle = triToggle % 3 + 1
-        elif mobile.Hits < mobile.HitsMax - 2:
+        elif mobile.Hits < mobile.HitsMax:
+            # Not Full Health condition
             addHealthBar(gd, index, mobile, offsetX, widthOffset, healthBarOffsetY, healthUnitHeight, NOTFULLHEALTH)
-            addButton(gd, index, offsetX, widthOffset, buttonOffsetY, 2268, inRange)  # Heal icon
-            addTriToggleImage(gd, index, offsetX, widthOffset, buttonOffsetY, triToggle)
-            triToggle = triToggle % 3 + 1
+            addButton(gd, index, offsetX, widthOffset, buttonOffsetY, 2268, inRange)  # Greater Heal icon
         elif mobile.Hits == mobile.HitsMax:
+            # Full Health condition, but only if none of the above conditions were true
             addHealthBar(gd, index, mobile, offsetX, widthOffset, healthBarOffsetY, healthUnitHeight, FULLHEALTH)
             addButton(gd, index, offsetX, widthOffset, buttonOffsetY, 2283, inRange)  # Invisibility icon
-        elif mobile.IsGhost == True:
-            addHealthBar(gd, index, mobile, offsetX, widthOffset, healthBarOffsetY, healthUnitHeight, FULLHEALTH)
-            addButton(gd, index, offsetX, widthOffset, buttonOffsetY, 2298, inRange)  # rez icon
 
         if mobile.Notoriety == 2:
             Gumps.AddImage(gd, offsetX + (index * widthOffset) - 7, -10 + 5 + buttonOffsetY + 75, 494, 277)
@@ -102,6 +102,7 @@ def updateGump():
             Target.Cancel()
 
         addNameLabel(gd, index, mobile, offsetX, widthOffset, labelOffsetY)
+
     Gumps.CloseGump(gumpNumber)
     Gumps.SendGump(gumpNumber, Player.Serial, 400, 300, gd.gumpDefinition, gd.gumpStrings)
 

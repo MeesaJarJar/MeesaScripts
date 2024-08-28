@@ -49,7 +49,7 @@ for item in itemList:
                 if int(charges) < int(maxCharges):
                     print(item.Name)
                     print(charges,maxCharges,"Player Going to:", item.Position.X,item.Position.Y, Player.Position.Z)
-                    
+                    Items.Message(item,0,item.Name)
                     Player.PathFindTo(item.Position.X,item.Position.Y,item.Position.Z)
                     
                     while Player.DistanceTo(item) > 1:

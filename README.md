@@ -250,6 +250,7 @@
 ### **MeesaJarJar_RunebookChargeFillerForLibraries.py**
 **Description:** Runebook Filler - Fills your runebook library runebooks with recall scrolls so that people can use it without having to have reagents!
 
+![MeesaJarJar_RunebookChargeFillerForLibraries](images/MeesaJarJar_RunebookChargeFillerForLibraries.gif)
 ---
 
 ### **MeesaJarJar_RuneMaker.py**
