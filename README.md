@@ -19,6 +19,7 @@
 ### **MeesaJarJar_AutoSextantGUMP.py**
 **Description:** X/Y Location and Sextant Coordinate GUMP. Displays the location of the player in both X/Y and Sextant Coordinates.
 
+![MeesaJarJar_AutoShipGUMP](images/MeesaJarJar_AutoSextantGUMP.png)
 ---
 
 ### **MeesaJarJar_AutoShipGUMP.py**
