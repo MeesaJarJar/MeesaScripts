@@ -126,6 +126,13 @@
 ![MeesaJarJar_HealthBarHelperGUMP](images/MeesaJarJar_HealthBarHelperGUMP.gif)
 ---
 
+
+### **MeesaJarJar_FakeHouseCloner.py**
+**Description:** Displays GUMP with the Health Bars, and Poison / Death / Hurt / Out of Range of players around the user. Heal, Cure, Rez players. Displays guildmates as well as others.
+
+![MeesaJarJar_FakeHouseCloner](images/MeesaJarJar_FakeHouseCloner.gif)
+---
+
 ### **MeesaJarJar_IDOCRecaller.py**
 **Description:** Meesa Jar Jar - PRIVATE SCRIPT - DO NOT SHARE. If you have this, and Jar Jar didn’t give it to you directly, you’re in BIG doo doo.
 
