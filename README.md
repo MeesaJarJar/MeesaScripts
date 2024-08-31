@@ -133,6 +133,12 @@
 ![MeesaJarJar_FakeHouseCloner](images/MeesaJarJar_FakeHouseCloner.gif)
 ---
 
+### **MeesaJarJar_GuildTagCounter.py**
+**Description:** This script counts the bank sitters around you and gives you a count for each guild tag. Also displays the tag above the players briefly.
+
+![MeesaJarJar_GuildTagCounter](images/MeesaJarJar_GuildTagCounter.png)
+---
+
 ### **MeesaJarJar_IDOCRecaller.py**
 **Description:** Meesa Jar Jar - PRIVATE SCRIPT - DO NOT SHARE. If you have this, and Jar Jar didn’t give it to you directly, you’re in BIG doo doo.
 
