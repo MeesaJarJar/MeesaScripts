@@ -99,6 +99,12 @@
 
 ---
 
+### **MeesaJarJar_FakeHouseCloner.py**
+**Description:** Displays GUMP with the Health Bars, and Poison / Death / Hurt / Out of Range of players around the user. Heal, Cure, Rez players. Displays guildmates as well as others.
+
+![MeesaJarJar_FakeHouseCloner](images/MeesaJarJar_FakeHouseCloner.gif)
+---
+
 ### **MeesaJarJar_GateHopChest.py**
 **Description:** Meesa Jar Jar's Gate Hopping Chest Script. Set a drop container to a SECURE chest that is accessible outside of your house. The rune location you mark for drop-off must have clear access TO THE RIGHT of it because it has to set the chest down first before putting it into the drop container.
 
@@ -120,23 +126,16 @@
 
 ---
 
-### **MeesaJarJar_HealthBarHelperGUMP.py**
-**Description:** Displays GUMP with the Health Bars, and Poison / Death / Hurt / Out of Range of players around the user. Heal, Cure, Rez players. Displays guildmates as well as others.
-
-![MeesaJarJar_HealthBarHelperGUMP](images/MeesaJarJar_HealthBarHelperGUMP.gif)
----
-
-
-### **MeesaJarJar_FakeHouseCloner.py**
-**Description:** Displays GUMP with the Health Bars, and Poison / Death / Hurt / Out of Range of players around the user. Heal, Cure, Rez players. Displays guildmates as well as others.
-
-![MeesaJarJar_FakeHouseCloner](images/MeesaJarJar_FakeHouseCloner.gif)
----
-
 ### **MeesaJarJar_GuildTagCounter.py**
 **Description:** This script counts the bank sitters around you and gives you a count for each guild tag. Also displays the tag above the players briefly.
 
 ![MeesaJarJar_GuildTagCounter](images/MeesaJarJar_GuildTagCounter.png)
+---
+
+### **MeesaJarJar_HealthBarHelperGUMP.py**
+**Description:** Displays GUMP with the Health Bars, and Poison / Death / Hurt / Out of Range of players around the user. Heal, Cure, Rez players. Displays guildmates as well as others.
+
+![MeesaJarJar_HealthBarHelperGUMP](images/MeesaJarJar_HealthBarHelperGUMP.gif)
 ---
 
 ### **MeesaJarJar_IDOCRecaller.py**
