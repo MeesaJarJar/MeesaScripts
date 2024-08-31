@@ -5,8 +5,17 @@
 # not all of the basic functions as original Razor CE. Script star
 # ts Minimized, and has all boat commands including an 
 # `Auto Target and Fire` option to make naval warfare a bit easier 
+#
+# To use this script, in Razor Enhanced, in the Targetting Tab
+# you must create a new entry. You must adjust this entry so that
+# it selects all nearby targets you wish to attack, so be sure
+# to select the Notorieties, etc properly, and use Test Target
+# to make sure it selects the correct mobiles. 
+#
 # -------------------------------------------------------------#
 # START CONFIG ------------------------------------------------#
+
+targetListName = 'enemiesIWantToShootAt'
 
 # END CONFIG --------------------------------------------------#
 
@@ -290,7 +299,7 @@ while True:
             
     if (gd.buttonid == 1090): 
         
-        mobile = Target.GetTargetFromList("shipautotarget")
+        mobile = Target.GetTargetFromList(targetListName)
         if mobile:
 
 
