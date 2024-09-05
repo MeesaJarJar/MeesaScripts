@@ -10,13 +10,26 @@
 # START CONFIG ------------------------------------------------#
 
 stealableKeywords = ['relic', 'portal focus', 'fragment', 'scroll of', 'epic', 'animal taming', 'rare']
-
+reagents = ['blood moss', 'mandrake root', 'black pearl']
+friendlyGuilds = ['lost', 'trin', 'pwn', 'bad', 'nsc', 'void', 's-b', 'yew', 'br', 'paws']
 # END CONFIG --------------------------------------------------#
 
 from System.Collections.Generic import List
 from System import Int32 as int
 from System import Byte
 running = True
+import re
+def getGuildTagFromMobile(mobile):
+    try:
+        properties_string = str(mobile.Properties[0])
+        tags = re.findall(r'\[([^\]]+)\]', properties_string)
+        if tags:
+            return tags[-1]
+        else:
+            return None
+    except (AttributeError, IndexError) as e:
+        print(f"Error extracting guild tag: {e}")
+        return None
 
 Misc.Pause(1000)
 Player.UseSkill("Stealing")
@@ -39,8 +52,12 @@ while running:
     foundMobiles = Mobiles.ApplyFilter(mobileFilter)
 
     targetMobile = Mobiles.Select(foundMobiles, "Nearest")
-
-    if targetMobile and targetMobile.Backpack:
+    if targetMobile != None:
+        targetMobileGuild = str(getGuildTagFromMobile(targetMobile)).lower()
+    
+    if targetMobile and targetMobile.Backpack and targetMobileGuild not in friendlyGuilds :
+        
+        print("Found Unfriendly Player in Guild:", targetMobileGuild)
         
         Items.OpenAt(targetMobile.Backpack, 100, 100)
         
