@@ -180,6 +180,11 @@
 
 ---
 
+### **MeesaJarJar_MeesaSpellbook.py**
+**Description:**  Slayer Spellbook Selector Gump scans the user's backpack for Slayer Spellbooks and displays a clickable gump showing lesser and super slayer types along with the mobiles they are effective against.
+
+![MeesaJarJar_MIBSailer](images/MeesaJarJar_MeesaSpellbook.gif)
+---
 ### **MeesaJarJar_MetaCrafterTalismanTrainer.py**
 **Description:** Crafting script for making tailoring objects to level the Crafter Meta Talisman. Unattended crafting that levels Talisman is against the rules, you MUST ATTEND this.
 
