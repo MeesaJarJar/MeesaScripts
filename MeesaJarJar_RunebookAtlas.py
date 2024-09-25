@@ -145,18 +145,18 @@ class Atlas:
             atlas.select_book_by_serial(tarSerial)
             
             distance = math.sqrt((Player.Position.X - lmrloc[0])**2 + (Player.Position.Y - lmrloc[1])**2 + (Player.Position.Z - lmrloc[2])**2)
-            print("in atlas_check_for_map_command and distance is:", distance)
+            #("in atlas_check_for_map_command and distance is:", distance)
             if distance > 15:
-                print("Calling recallMeesaLMRRunebook 0 to get to LMR ")
+                #print("Calling recallMeesaLMRRunebook 0 to get to LMR ")
                 atlas.recallMeesaLMRunebook(0)
                 Misc.Pause(1500)
-                print("in atlas_check about to navigate to safe spot after recalling to LM")
+                #print("in atlas_check about to navigate to safe spot after recalling to LM")
                 navigate_to(1396,1965)
             else:
-                print("Walking to LMR position because we are distance:", distance)
+                #print("Walking to LMR position because we are distance:", distance)
                 navigate_to(1396,1965)
                 
-            print("Trying to find the book.")
+            #print("Trying to find the book.")
             book = Items.FindBySerial(atlas.selected_book["serial"])
             if book:
                 
@@ -167,12 +167,12 @@ class Atlas:
                     zFloor = 7
                     
                 if zFloor == 27:
-                    print("Book is upstairs in atlas_check_for_map_command")
+                    #print("Book is upstairs in atlas_check_for_map_command")
                     atlas.goUpstairs()
                     Misc.Pause(650)
-                else:
-                    print("Book is downstairs in atlas_check_for_map_command")
-                print("Going to book now in atlas_check_for_map_command")
+                #else:
+                    #print("Book is downstairs in atlas_check_for_map_command")
+                #print("Going to book now in atlas_check_for_map_command")
                 navigate_to(book.Position.X,book.Position.Y)
 
                 Misc.Pause(250)
@@ -188,7 +188,7 @@ class Atlas:
                    
                     if re.sub(pattern, '', str(myName)) == re.sub(pattern, '', str(tarName)):
                         foundName = True
-                        print("About to call atlas.recallOrGate in atlas_check_for_map_command")
+                        #("About to call atlas.recallOrGate in atlas_check_for_map_command")
                         atlas.recallOrGate(atlas.selected_book, count)
                         pass
                     count = count + 1  
@@ -248,14 +248,14 @@ class Atlas:
 
                     distance = math.sqrt((Player.Position.X - lmrloc[0])**2 + (Player.Position.Y - lmrloc[1])**2 + (Player.Position.Z - lmrloc[2])**2)
                     if distance > 50:
-                        print("In recallOrGate but the distance to LM is over 50, so recall to LM")
-                        print("DISTANCE IS : ", distance)
+                        #print("In recallOrGate but the distance to LM is over 50, so recall to LM")
+                        #print("DISTANCE IS : ", distance)
                         atlas.recallMeesaLMRunebook(0)
                         Misc.Pause(1500)
 
                         navigate_to(1396,1965)
-                    else:
-                        print("Distance to lmrloc is less than 50, Distance:", distance)
+                    #else:
+                        #print("Distance to lmrloc is less than 50, Distance:", distance)
 
 
                     book = Items.FindBySerial(selected_book["serial"])
@@ -270,13 +270,13 @@ class Atlas:
                         if zFloor == 27 and Player.Position.Z == 7:
                             atlas.goUpstairs()
                             Misc.Pause(650)
-                        print("navigate_to the book position is called in recall or gate funct")
+                        #("navigate_to the book position is called in recall or gate funct")
                         if Player.DistanceTo(book) >= 2:
                             navigate_to(book.Position.X,book.Position.Y)
   
                         
-                    else: 
-                        print("FAILED TO FIND LM RUNEBOOK AT LM")   
+                    #else: 
+                        #print("FAILED TO FIND LM RUNEBOOK AT LM")   
                 
                 
                 if atlas.useRecallScrolls:
@@ -340,7 +340,7 @@ class Atlas:
         itemList.sort(key=lambda item: (item.Position.X, item.Position.Y, item.Position.Z))
         
     def recallMeesaLMRunebook(self, index):
-        print("THIS PORTION SHOULD GET YOU TO LM IF YOU ARE NOT THERE.")
+        #print("THIS PORTION SHOULD GET YOU TO LM IF YOU ARE NOT THERE.")
         canContinue = True
         if atlas.selectedRecall == True:
             if Player.Mana < 11:
@@ -400,7 +400,7 @@ class Atlas:
             
         Misc.Pause(100)
         closeRunebook()
-        print("NOW THE PLAYER SHOULD BE AT LINCOLN MALLMORIAL")
+        #print("NOW THE PLAYER SHOULD BE AT LINCOLN MALLMORIAL")
 
         
     def sort_books_by_name(self):
@@ -572,6 +572,11 @@ def updateGump():
         
         Gumps.AddLabel(gd,39+offsetX,119+offsetY,1152,"Atlas")
 
+        
+        Gumps.AddAlphaRegion(gd,150,210+offsetY,150,20)
+
+        Gumps.AddLabel(gd,152,210+offsetY,2497,"github.com/meesajarjar/")
+        
         for loc in dinodnaimage:
             Gumps.AddImage(gd,int(loc[0] + offsetDinoDNAX),int(loc[1]+ offsetDinoDNAY),6000, loc[2])
             
@@ -861,7 +866,23 @@ Meesa also given` <BASEFONT color=#0EC23E size=7> muy muy big thanks to Aegwyn, 
             Gumps.AddButton(gd,200,78,1532,1531,304,1,0) 
             Gumps.AddTooltip(gd,1061114,str("Toggle Background Transparency"))  
             
+        Gumps.AddImage(gd,200,305,22050)
 
+        Gumps.AddBackground(gd,203,342,35,30,410)
+
+        Gumps.AddButton(gd,202,308,1691,1692,8009,1,0)
+
+        Gumps.AddTooltip(gd,1061114,str("Sextant XY Coordinate Converter"))  
+
+        Gumps.AddLabel(gd,210,342,1152,"MIB")
+
+        Gumps.AddLabel(gd,207,355,1152,"X/Y")
+
+        Gumps.AddBackground(gd,175,372,98,30,1755)
+
+        Gumps.AddButton(gd,180,375,2515,2515,8008,1,0)   
+
+        Gumps.AddTooltip(gd,1061114,str("UPDATE FROM GITHUB")) 
         Gumps.AddLabel(gd,290,440,2033,"Created by Meesa Jar Jar")        
         Gumps.AddLabel(gd,310,450,2035,"Peace & Love!")     
         
@@ -1039,34 +1060,64 @@ while True:
             updateGump()    
            
 
-        if gd.buttonid > 7999 and gd.buttonid < 9000:
+        if gd.buttonid == 8009:
+
+            if Misc.ScriptStatus("MeesaJarJar_RuneBookAtlas_Sextant.py") == False:
+
+                Misc.ScriptRun("MeesaJarJar_RuneBookAtlas_Sextant.py")
+
+            print("Starting Runebook Atlas Sextant")
+
+            gd.buttonid = -1  
+
+            toggle_gump_state() 
+
+            updateGump() 
+
+        elif gd.buttonid == 8008:
+
+            print("UPDATING ALL SCRIPTS FROM GITHUB")
+
+            Player.HeadMessage(0,"UPDATING ALL SCRIPTS FROM GITHUB")
+
+            if Misc.ScriptStatus("MeesaJarJar_RuneBookAtlas_UpdateAll.py") == False:
+
+                Misc.ScriptRun("MeesaJarJar_RuneBookAtlas_UpdateAll.py")
+
+            gd.buttonid = -1   
+
+            toggle_gump_state()
+
+            updateGump() 
+
+        elif gd.buttonid > 7999 and gd.buttonid < 9000:
             
             Journal.Clear()
             ind = gd.buttonid - 8000
             if ind == 0:
                 atlas.recallMeesaLMRunebook(2)
-                
+                toggle_gump_state()
             if ind == 1:
                 atlas.recallMeesaLMRunebook(3)
-            
+                toggle_gump_state()
             if ind == 2:
                 atlas.recallMeesaLMRunebook(3)
-            
+                toggle_gump_state()
             if ind == 3:
                 atlas.recallMeesaLMRunebook(4)
-            
+                toggle_gump_state()
             if ind == 4:
                 atlas.recallMeesaLMRunebook(8)
-            
+                toggle_gump_state()
             if ind == 5:
                 atlas.recallMeesaLMRunebook(5)
-            
+                toggle_gump_state()
             if ind == 6:
                 atlas.recallMeesaLMRunebook(7)
-            
+                toggle_gump_state()
             if ind == 7:
                 atlas.recallMeesaLMRunebook(6)
-                        
+                toggle_gump_state()
             gd.buttonid = -1
             updateGump()   
             
