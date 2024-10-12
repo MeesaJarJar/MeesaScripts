@@ -192,8 +192,11 @@ class Atlas:
                         atlas.recallOrGate(atlas.selected_book, count)
                         pass
                     count = count + 1  
+            toggle_gump_state()
             Gumps.SendAction(gumpid,0)
-
+            closeRunebook()
+            
+            
     def select_book(self, book_name):
         for book in self.books:
             if book["name"] == book_name:
@@ -1209,8 +1212,12 @@ while True:
             gd.buttonid = -1        
          
         if gd.buttonid == 48:  
-            if Misc.ScriptStatus("MeesaJarJar_RuneBookAtlas_Map.py") == False:
-                Misc.ScriptRun("MeesaJarJar_RuneBookAtlas_Map.py")
+            print("BUTTON RIGHT RUN")
+            print("Trying to run MeesaJarJar_FastClickyMap.py")
+            if Misc.ScriptStatus("MeesaJarJar_FastClickyMap.py") == False:
+                Misc.ScriptRun("MeesaJarJar_FastClickyMap.py")
             print("Starting Runebook Atlas Map")
-            gd.buttonid = -1   
+            
+            gd.buttonid = 0  
+            
             updateGump()  
