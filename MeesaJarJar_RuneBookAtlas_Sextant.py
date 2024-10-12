@@ -28,8 +28,8 @@ WorldSize = [4096, 5120]
 TilesPerDegree = [WorldSize[0] / 360.0, WorldSize[1] / 360.0]
 
 def getMIBCoords():
-    Player.HeadMessage(0, "Select MIB to Extract Coordinates From:")
-    mibSerial = Target.PromptTarget("Select MIB", 0)
+    Player.HeadMessage(0, "Select MIB / TMAP to Extract Coordinates From:")
+    mibSerial = Target.PromptTarget("Select MIB/TMAP", 0)
     mib = Items.FindBySerial(mibSerial)
     x = 0
     y = 0
@@ -39,52 +39,71 @@ def getMIBCoords():
         else:
             itemType = 'MIB'
 
-        Items.WaitForProps(mib, 5000)
-        props = str(mib.Properties)
-
-        while 'Location' not in props:
-            Misc.Pause(250)
+        if itemType == 'MIB':
+            #print("MIB TYPE")
             Items.UseItem(mib)
-            Items.WaitForProps(mib, 5000)
-            props = str(mib.Properties)
+            Misc.Pause(1000)
+            gumpLines = Gumps.GetLineList(0x550a461b)
+            if len(gumpLines) > 2:
+                split_result = str(gumpLines[2]).split(',')
+                if len(split_result) == 2:
+                    partOne, partTwo = split_result
+                    deg1, sec1, dir1 = splitToPieces(partOne)
+                    deg2, sec2, dir2 = splitToPieces(partTwo)
+                    Gumps.CloseGump(0x550a461b)
+                    y = convertDegreesToDecimal(deg1, sec1, dir1)
+                    x = convertDegreesToDecimal(deg2, sec2, dir2)
+                    Misc.SetSharedValue('Atlas_Go_MIBX', x)
+                    Misc.SetSharedValue('Atlas_Go_MIBY', y)
+                    #print("Found Coordinates:", x, y)
+                    return x, y
+                else:
+                    print("ERROR: Unexpected gump format:", gumpLines[2])
+                    return None
+            else:
+                print("ERROR: Insufficient gump data.")
+                return None
 
-        start_index = props.find('Location: (') + len('Location: (')
-        end_index = props.find(')', start_index)
+        elif itemType == 'TMAP':
+            #print("Item is a TMAP")
+            tmap = Items.FindBySerial(mibSerial)
+            Items.UseItem(tmap)
+            Misc.Pause(1000)
+            props = tmap.Properties
+            
+            for prop in props:
+                prop_str = str(prop).lower()
+                if 'location' in prop_str:
+                    #print("Found Location -", prop_str)
 
-        if start_index > 0 and end_index > start_index:
-            coordinates = props[start_index:end_index]
-            coordinates = coordinates.replace(" ", "")  # Remove any spaces if present
-            x_str, y_str = coordinates.split(',')
+                    # Extract the part inside parentheses
+                    start_index = prop_str.find('location: (') + len('location: (')
+                    end_index = prop_str.find(')', start_index)
 
-            x = int(x_str)
-            y = int(y_str)
+                    if start_index > 0 and end_index > start_index:
+                        coordinates = prop_str[start_index:end_index]  # "464, 2100"
+                        #print("Extracted Coordinates:", coordinates)
 
-            Misc.SetSharedValue('Atlas_Go_MIBX', x)
-            Misc.SetSharedValue('Atlas_Go_MIBY', y)
-            return x, y
-        else:
-            print("ERROR: Could not find coordinates in the properties.")
+                        # Split the coordinates into x and y
+                        x_str, y_str = coordinates.split(',')
+                        x = int(x_str.strip())  # Remove any extra spaces and convert to int
+                        y = int(y_str.strip())
 
-        if itemType != 'TMAP':
-            Items.UseItem(mib)
-            Gumps.WaitForGump(1426736667, 3000)
-            gumpLines = Gumps.GetLineList(1426736667)
-            partOne, partTwo = gumpLines[0].split(',')
-            deg1, sec1, dir1 = splitToPieces(partOne)
-            deg2, sec2, dir2 = splitToPieces(partTwo)
-            Gumps.CloseGump(0)
-            y = convertDegreesToDecimal(deg1, sec1, dir1)
-            x = convertDegreesToDecimal(deg2, sec2, dir2)
-            Misc.SetSharedValue('Atlas_Go_MIBX', x)
-            Misc.SetSharedValue('Atlas_Go_MIBY', y)
+                        # Set shared values
+                        Misc.SetSharedValue('Atlas_Go_MIBX', x)
+                        Misc.SetSharedValue('Atlas_Go_MIBY', y)
+                        return x, y
+                    else:
+                        print("ERROR: Could not extract coordinates.")
+                        return None
         else:
             print("ERROR DOING TMAP EXTRACT")
-        return x, y
+            return None
+
     else:
         print("FAILED!")
-        x = 0
-        y = 0
-    return x, y
+        return None
+
 
 def convert_packet_to_bytes(packet):
     byte_list = []
@@ -242,7 +261,7 @@ def updateGump():
     Gumps.AddTooltip(gd, 1061114, "Set to Player`s Position.")
 
     Gumps.AddButton(gd, 150, 75, 2002, 2001, 6, 1, 0)
-    Gumps.AddTooltip(gd, 1061114, "Read from MIB")
+    Gumps.AddTooltip(gd, 1061114, "Read from MIB / TMAP")
 
     Gumps.AddBackground(gd, 45, 87, 25, 25, 9400)
     Gumps.AddBackground(gd, 112, 87, 25, 25, 9400)
@@ -342,12 +361,17 @@ while True:
 
         if gd.buttonid == 6:
             x, y = getMIBCoords()
-            coords = [x, y]
+            if x is not None and y is not None:
+                coords = [x, y]
+                Player.HeadMessage(0, "Coordinates:" + str(coords))
+                print("Coordinates:" + str(coords))
+                
+                latitude_degrees, latitude_minutes, latitude_direction = convertDecimalToDegrees(int(coords[0]), 'latitude')
+                longitude_degrees, longitude_minutes, longitude_direction = convertDecimalToDegrees(int(coords[1]), 'longitude')
 
-            latitude_degrees, latitude_minutes, latitude_direction = convertDecimalToDegrees(int(coords[0]), 'latitude')
-            longitude_degrees, longitude_minutes, longitude_direction = convertDecimalToDegrees(int(coords[1]), 'longitude')
+                sextant = [latitude_degrees, latitude_minutes, latitude_direction, longitude_degrees, longitude_minutes, longitude_direction]
 
-            sextant = [latitude_degrees, latitude_minutes, latitude_direction, longitude_degrees, longitude_minutes, longitude_direction]
+                updateGump()
+            else:
+                print("ERROR: Could not retrieve MIB/ TMAP coordinates.")
 
-            gd.buttonid = -1
-            updateGump()
