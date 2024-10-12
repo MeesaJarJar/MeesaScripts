@@ -180,8 +180,7 @@ while True:
             Gumps.CloseGump(gumpMapNumber)
             Misc.ScriptStop("MeesaJarJar_FastClickyMap.py")
         if gdx.buttonid in button_positions:
-            Player.ChatSay(1151,"Go Go Jar Jar - Runebook Atlas!")
-            twirl()
+
             # Get downscaled coordinates
             x, y = button_positions[gdx.buttonid]
             #print(f"USER CLICKED ON BUTTON AT {x}, {y}")
@@ -201,7 +200,8 @@ while True:
             Misc.SetSharedValue("Atlas_Go_Name", str(myName))
             Misc.SetSharedValue("Atlas_Go_RuneX", int(myX))
             Misc.SetSharedValue("Atlas_Go_RuneY", int(myY))
-            
+            Player.ChatSay(1151,"Go Go Jar Jar - Runebook Atlas!")
+            twirl()
             gdx.buttonid = -1  
             
             start_point = (Player.Position.X, Player.Position.Y)
