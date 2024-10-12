@@ -175,6 +175,10 @@ while True:
     gdx = Gumps.GetGumpData(gumpMapNumber)
     
     if gdx and gdx.buttonid != -1:
+        if gdx.buttonid == 0:
+            #Misc.ScriptRun("MeesaJarJar_FastClickyMap.py")
+            Gumps.CloseGump(gumpMapNumber)
+            Misc.ScriptStop("MeesaJarJar_FastClickyMap.py")
         if gdx.buttonid in button_positions:
             Player.ChatSay(1151,"Go Go Jar Jar - Runebook Atlas!")
             twirl()

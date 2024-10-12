@@ -446,40 +446,78 @@ class Point2D:
         self.Y = y
 
 def alternate_direction(direction):
+    # Alternate between directions if movement fails
     if direction in ['North', 'South']:
         return 'East' if Player.Position.X % 2 == 0 else 'West'
-    else:
+    elif direction in ['East', 'West']:
         return 'North' if Player.Position.Y % 2 == 0 else 'South'
+    elif direction == 'NorthWest':
+        return 'NorthEast' if Player.Position.X % 2 == 0 else 'SouthWest'
+    elif direction == 'NorthEast':
+        return 'NorthWest' if Player.Position.X % 2 == 0 else 'SouthEast'
+    elif direction == 'SouthWest':
+        return 'SouthEast' if Player.Position.X % 2 == 0 else 'NorthWest'
+    elif direction == 'SouthEast':
+        return 'SouthWest' if Player.Position.X % 2 == 0 else 'NorthEast'
 
 def navigate_to(x_target, y_target):
     print("Navigating To:", x_target, y_target)
-    failure_count = 0 
+    failure_count = 0  # Track failures for alternate directions
 
     while True:
         current_pos = Player.Position
         dx = x_target - current_pos.X
         dy = y_target - current_pos.Y
 
-        if abs(dx) > abs(dy):
+        # Prioritize diagonal movement if both dx and dy are non-zero
+        if abs(dx) > 0 and abs(dy) > 0:
+            if dx > 0 and dy > 0:
+                primary_direction = 'SouthEast'
+            elif dx > 0 and dy < 0:
+                primary_direction = 'NorthEast'
+            elif dx < 0 and dy > 0:
+                primary_direction = 'SouthWest'
+            else:
+                primary_direction = 'NorthWest'
+        # If one axis has been aligned, move in cardinal directions
+        elif abs(dx) > abs(dy):
             primary_direction = 'East' if dx > 0 else 'West'
         else:
             primary_direction = 'South' if dy > 0 else 'North'
 
+        # If there are failures, switch to an alternate direction
         direction = primary_direction if failure_count < 3 else alternate_direction(primary_direction)
 
-        expected_pos = Point2D(
-            current_pos.X + (1 if direction == 'East' else -1 if direction == 'West' else 0),
-            current_pos.Y + (1 if direction == 'South' else -1 if direction == 'North' else 0)
-        )
+        # Calculate expected position based on the current direction
+        if direction == 'East':
+            expected_pos = Point2D(current_pos.X + 1, current_pos.Y)
+        elif direction == 'West':
+            expected_pos = Point2D(current_pos.X - 1, current_pos.Y)
+        elif direction == 'South':
+            expected_pos = Point2D(current_pos.X, current_pos.Y + 1)
+        elif direction == 'North':
+            expected_pos = Point2D(current_pos.X, current_pos.Y - 1)
+        elif direction == 'NorthEast':
+            expected_pos = Point2D(current_pos.X + 1, current_pos.Y - 1)
+        elif direction == 'NorthWest':
+            expected_pos = Point2D(current_pos.X - 1, current_pos.Y - 1)
+        elif direction == 'SouthEast':
+            expected_pos = Point2D(current_pos.X + 1, current_pos.Y + 1)
+        elif direction == 'SouthWest':
+            expected_pos = Point2D(current_pos.X - 1, current_pos.Y + 1)
 
+        # Attempt movement in the chosen direction
         move_success = Player.Walk(direction)
         new_pos = Player.Position
+
+        # Check if movement was successful
         if not move_success or (new_pos.X != expected_pos.X or new_pos.Y != expected_pos.Y):
-            failure_count += 1
+            failure_count += 1  # Increment failure count if move fails
             continue
         else:
-            failure_count = 0
+            failure_count = 0  # Reset failure count if move succeeds
 
+        # Stop once we reach the target position
         if new_pos.X == x_target and new_pos.Y == y_target:
             break
   
