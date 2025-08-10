@@ -194,6 +194,7 @@ class Atlas:
                     count = count + 1  
             toggle_gump_state()
             Gumps.SendAction(gumpid,0)
+            print("DEBUG CLOSE CALL")
             closeRunebook()
             
             
@@ -305,6 +306,7 @@ class Atlas:
                         
                     else:
                         print("GATE NOT FOUND")
+            print("INRECALLORGATE")
             closeRunebook()
             Gumps.SendAction(gumpid,0)
             
@@ -403,7 +405,7 @@ class Atlas:
             
         Misc.Pause(100)
         closeRunebook()
-        #print("NOW THE PLAYER SHOULD BE AT LINCOLN MALLMORIAL")
+        print("NOW THE PLAYER SHOULD BE AT LINCOLN MALLMORIAL")
 
         
     def sort_books_by_name(self):
@@ -434,11 +436,15 @@ def map_locations_to_numbers(locations):
     return mapped_numbers
 
 def closeRunebook():
+    print("USING ADVANCED ACTION CLOSE GUMP")
+    Gumps.SendAdvancedAction(gumpid, 0, [], [33,34], ["",""])
     if Gumps.AllGumpIDs():
         currentGumps = Gumps.AllGumpIDs()
         ALLGUMPIDS = [gumpID for gumpID in currentGumps]
-        if 1431013363 in ALLGUMPIDS:
-            Gumps.SendAction(1431013363, 0)
+        if gumpid in ALLGUMPIDS:
+            Gumps.SendAction(gumpid, 0)
+    
+    
             
 class Point2D:
     def __init__(self, x, y):
@@ -1259,3 +1265,4 @@ while True:
             gd.buttonid = 0  
             
             updateGump()  
+            closeRunebook()
