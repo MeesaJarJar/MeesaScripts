@@ -2,18 +2,19 @@
 # BabyBro / MesaJarJar on Discord - Peace & Love! -------------#
 # -------------------------------------------------------------#
 # Description: Ultima Online 55 Language Translator using
-# Ollama Local, which allows for you to specify Gemma
-# or any other model to use to use as a translator. This is
-# intended to be a proof of concept to help bring UO into
-# more languages. Now with Compact / Expanded toggle and
-# overhead translated speech bubbles above the speaker!
+# Ollama Local. Compact/Expanded toggle, overhead speech
+# bubbles, and a persistent disk cache that is loaded at
+# startup and written back whenever a new live translation
+# is made. The master cache is shared with build_cache.py.
 # -------------------------------------------------------------#
 
 import clr
 clr.AddReference("System")
 import System
+from System.IO   import File, Path
 from System.Net  import WebClient, WebException
 from System.Text import Encoding
+import re as _re
 Journal.Clear()
 
 # ---------------------------------------------------------------------------
@@ -21,11 +22,19 @@ Journal.Clear()
 # ---------------------------------------------------------------------------
 OLLAMA_URL       = "http://localhost:11434/api/generate"
 OLLAMA_MODEL     = "gemma3:1b"
-TARGET_LANGUAGE  = "Spanish"
+TARGET_LANGUAGE  = "English"
 POLL_INTERVAL_MS = 2000
 CONTEXT_LINES    = 3
 SYSTEM_HUE       = 946
 DEBUG            = True
+
+# Shared cache file — also written by build_cache.py
+# Format: { "original message": { "Spanish": "...", "French": "..." }, ... }
+CACHE_FILE = r"C:\Program Files (x86)\UOForever\UO\ForeverOnline\Data\Client\uo_translation_cache.json"
+
+# How many new live translations to accumulate before flushing to disk.
+# Lower = safer against crashes, higher = fewer writes.
+CACHE_SAVE_EVERY = 10
 
 TRANSLATE_TYPES = ('Regular', 'Yell', 'Whisper', 'Encoded', 'Special',
                    'Guild', 'Alliance', 'Party')
@@ -39,18 +48,10 @@ IGNORE_CONTAINS = [
 # ---------------------------------------------------------------------------
 # HEAD MESSAGE CONFIG
 # ---------------------------------------------------------------------------
-# When a translation is ready we search for the speaker within HEAD_MSG_RANGE
-# tiles and call Mobiles.Message() to show the translation above their head.
-#
-# HEAD_MSG_ENABLED  - set False to turn off overhead bubbles entirely
-# HEAD_MSG_HUE      - colour of the overhead text (matches HUE_TRANS by default)
-# HEAD_MSG_RANGE    - tile radius searched for the speaker mobile
-# HEAD_MSG_PREFIX   - short tag prepended to every overhead translation
-# ---------------------------------------------------------------------------
 HEAD_MSG_ENABLED = True
-HEAD_MSG_HUE     = 68      # same green as HUE_TRANS in the gump
-HEAD_MSG_RANGE   = 12      # search radius in tiles
-HEAD_MSG_PREFIX  = "[T] "  # visible prefix above the mobiles head
+HEAD_MSG_HUE     = 68
+HEAD_MSG_RANGE   = 12
+HEAD_MSG_PREFIX  = "[T] "
 
 # ---------------------------------------------------------------------------
 # LAYOUT PROFILES
@@ -105,51 +106,143 @@ BTN_TOGGLE   = 3
 # ---------------------------------------------------------------------------
 # STATE
 # ---------------------------------------------------------------------------
-_translation_cache  = {}
+# _disk_cache  : the full nested dict loaded from / saved to CACHE_FILE
+#                { original: { lang: translation, ... }, ... }
+# _runtime_cache: flat dict for this session { original: translation }
+#                 populated from _disk_cache on startup, extended by live calls
+_disk_cache    = {}
+_runtime_cache = {}
+_unsaved_count = 0   # live translations since last disk flush
+
 _display_rows       = []
 _last_journal_count = 0
 _name_hues          = {}
 _compact_mode       = False
 
 # ---------------------------------------------------------------------------
+# DISK CACHE  — load / save
+# ---------------------------------------------------------------------------
+def _json_escape(s):
+    s = str(s)
+    s = s.replace("\\", "\\\\")
+    s = s.replace('"',  '\\"')
+    s = s.replace("\n", "\\n")
+    s = s.replace("\r", "\\r")
+    s = s.replace("\t", "\\t")
+    return s
+
+
+def _json_unescape(s):
+    return (s.replace('\\"', '"')
+             .replace('\\\\', '\\')
+             .replace('\\n', '\n')
+             .replace('\\r', '\r')
+             .replace('\\t', '\t'))
+
+
+def _load_disk_cache():
+    """
+    Read CACHE_FILE into a nested dict { original: { lang: translation } }.
+    Returns an empty dict if the file doesn't exist or can't be parsed.
+    """
+    result = {}
+    try:
+        if not File.Exists(CACHE_FILE):
+            Misc.SendMessage("[Cache] No cache file yet, starting fresh.", SYSTEM_HUE)
+            return result
+
+        text = File.ReadAllText(CACHE_FILE)
+
+        # Parse outer keys (original messages)
+        outer = _re.findall(
+            r'"((?:[^"\\]|\\.)*?)"\s*:\s*\{([^{}]*)\}', text, _re.DOTALL)# "
+
+        for msg_esc, inner_text in outer:
+            msg = _json_unescape(msg_esc)
+            langs = {}
+            pairs = _re.findall(
+                r'"((?:[^"\\]|\\.)*?)"\s*:\s*"((?:[^"\\]|\\.)*?)"', inner_text)
+            for lang_esc, trans_esc in pairs:
+                langs[_json_unescape(lang_esc)] = _json_unescape(trans_esc)
+            result[msg] = langs
+
+        Misc.SendMessage(
+            "[Cache] Loaded {} messages from disk.".format(len(result)), SYSTEM_HUE)
+    except System.Exception as e:
+        Misc.SendMessage(
+            "[Cache] Load error: {}".format(str(e.Message)[:80]), SYSTEM_HUE)
+    return result
+
+
+def _save_disk_cache():
+    """
+    Serialise _disk_cache back to CACHE_FILE as pretty JSON.
+    Called automatically every CACHE_SAVE_EVERY new live translations.
+    """
+    try:
+        lines = ["{"]
+        keys = list(_disk_cache.keys())
+        for ki, msg in enumerate(keys):
+            comma_outer = "," if ki < len(keys) - 1 else ""
+            lines.append('  "{}": {{'.format(_json_escape(msg)))
+            langs = _disk_cache[msg]
+            lang_keys = list(langs.keys())
+            for li, lang in enumerate(lang_keys):
+                comma_inner = "," if li < len(lang_keys) - 1 else ""
+                lines.append('    "{}": "{}"{}'.format(
+                    _json_escape(lang),
+                    _json_escape(langs[lang]),
+                    comma_inner))
+            lines.append("  }}{}".format(comma_outer))
+        lines.append("}")
+        File.WriteAllText(CACHE_FILE, "\n".join(lines))
+        if DEBUG:
+            Misc.SendMessage(
+                "[Cache] Saved {} messages to disk.".format(len(_disk_cache)),
+                SYSTEM_HUE)
+    except System.Exception as e:
+        Misc.SendMessage(
+            "[Cache] Save error: {}".format(str(e.Message)[:80]), SYSTEM_HUE)
+
+
+def _cache_store(original, language, translation):
+    """
+    Store a new live translation in both the runtime and disk caches,
+    and flush to disk every CACHE_SAVE_EVERY entries.
+    """
+    global _unsaved_count
+
+    _runtime_cache[original] = translation
+
+    if original not in _disk_cache:
+        _disk_cache[original] = {}
+    _disk_cache[original][language] = translation
+
+    _unsaved_count += 1
+    if _unsaved_count >= CACHE_SAVE_EVERY:
+        _save_disk_cache()
+        _unsaved_count = 0
+
+# ---------------------------------------------------------------------------
 # MOBILE FINDER
 # ---------------------------------------------------------------------------
 def _find_mobile_by_name(name):
-    """
-    Search nearby mobiles for one whose Name matches `name` exactly.
-    Returns the Mobile object on the first match, or None if not found.
-    The search radius is controlled by HEAD_MSG_RANGE in CONFIG above.
-    """
     if not name:
         return None
-
     name = str(name).strip()
-
     mobileFilter = Mobiles.Filter()
     mobileFilter.Enabled          = True
     mobileFilter.RangeMin         = 0
     mobileFilter.RangeMax         = HEAD_MSG_RANGE
     mobileFilter.CheckLineOfSight = False
     mobileFilter.IsGhost          = False
-
-    foundMobiles = Mobiles.ApplyFilter(mobileFilter)
-
-    for mobile in foundMobiles:
+    for mobile in Mobiles.ApplyFilter(mobileFilter):
         if str(mobile.Name).strip() == name:
             return mobile
-
     return None
 
 
 def _show_head_message(speaker_name, translated_text):
-    """
-    Locate the speaker and pop the translation above their head.
-    Silently does nothing when:
-      - HEAD_MSG_ENABLED is False
-      - speaker_name is empty (system / world messages)
-      - the translation is an error string
-      - the mobile is not found within HEAD_MSG_RANGE tiles
-    """
     if not HEAD_MSG_ENABLED:
         return
     if not speaker_name:
@@ -157,8 +250,6 @@ def _show_head_message(speaker_name, translated_text):
     if translated_text.startswith("[ERR"):
         return
 
-    # If the speaker is the player themselves, skip the mobile scan entirely
-    # and use Player.Serial directly — its always available and exact.
     if str(speaker_name).strip() == str(Player.Name).strip():
         target = Mobiles.FindBySerial(Player.Serial)
         serial = Player.Serial
@@ -168,8 +259,7 @@ def _show_head_message(speaker_name, translated_text):
             if DEBUG:
                 Misc.SendMessage(
                     "[T] HeadMsg: '{}' not in range {}.".format(
-                        speaker_name, HEAD_MSG_RANGE),
-                    SYSTEM_HUE)
+                        speaker_name, HEAD_MSG_RANGE), SYSTEM_HUE)
             return
         serial = target.Serial
 
@@ -177,8 +267,7 @@ def _show_head_message(speaker_name, translated_text):
 
     if DEBUG:
         Misc.SendMessage(
-            "[T] HeadMsg -> {} (0x{:X})".format(speaker_name, serial),
-            SYSTEM_HUE)
+            "[T] HeadMsg -> {} (0x{:X})".format(speaker_name, serial), SYSTEM_HUE)
 
 # ---------------------------------------------------------------------------
 # TEXT WRAP
@@ -201,7 +290,7 @@ def _wrap(text, width=30):
 # ---------------------------------------------------------------------------
 # OLLAMA
 # ---------------------------------------------------------------------------
-def _json_escape(s):
+def _json_escape_prompt(s):
     s = s.replace("\\", "\\\\")
     s = s.replace('"',  '\\"')
     s = s.replace("\n", "\\n")
@@ -238,14 +327,13 @@ def _call_ollama(prompt):
     body = (
         '{{"model":"{m}","prompt":{p},"stream":false,'
         '"options":{{"temperature":0.1,"num_predict":150,"top_k":10}}}}'
-    ).format(m=OLLAMA_MODEL, p=_json_escape(prompt))
+    ).format(m=OLLAMA_MODEL, p=_json_escape_prompt(prompt))
     try:
         wc = WebClient()
         wc.Headers.Add("Content-Type", "application/json")
         wc.Encoding = Encoding.UTF8
         rb = wc.UploadData(OLLAMA_URL, "POST", Encoding.UTF8.GetBytes(body))
-        rs = Encoding.UTF8.GetString(rb)
-        return True, _parse_response(rs).strip()
+        return True, _parse_response(Encoding.UTF8.GetString(rb)).strip()
     except WebException as e:
         return False, "NET ERR: {}".format(str(e.Message)[:60])
     except System.Exception as e:
@@ -271,15 +359,32 @@ def _build_prompt(context_lines, line):
 
 def _translate(line, context):
     key = line.strip()
-    if key in _translation_cache:
+
+    # 1. Runtime memory cache (fastest — same session)
+    if key in _runtime_cache:
         if DEBUG:
-            Misc.SendMessage("[T] CACHE: {}".format(key[:40]), SYSTEM_HUE)
-        return _translation_cache[key]
+            Misc.SendMessage("[T] MEM: {}".format(key[:40]), SYSTEM_HUE)
+        return _runtime_cache[key]
+
+    # 2. Disk cache loaded at startup (covers pre-built master dictionary)
+    if key in _disk_cache and TARGET_LANGUAGE in _disk_cache[key]:
+        val = _disk_cache[key][TARGET_LANGUAGE]
+        _runtime_cache[key] = val
+        if DEBUG:
+            Misc.SendMessage("[T] DISK: {}".format(key[:40]), SYSTEM_HUE)
+        return val
+
+    # 3. Live Ollama call — result is saved back to disk cache
     if DEBUG:
-        Misc.SendMessage("[T] Translating: {}".format(key[:40]), SYSTEM_HUE)
+        Misc.SendMessage("[T] OLLAMA: {}".format(key[:40]), SYSTEM_HUE)
     ok, result = _call_ollama(_build_prompt(context, key))
     val = result if ok else "[ERR: {}]".format(result)
-    _translation_cache[key] = val
+
+    if ok:
+        _cache_store(key, TARGET_LANGUAGE, val)
+    else:
+        _runtime_cache[key] = val   # dont persist errors to disk
+
     return val
 
 # ---------------------------------------------------------------------------
@@ -288,8 +393,7 @@ def _translate(line, context):
 def _get_name_hue(name):
     if name in _name_hues:
         return _name_hues[name]
-    h = abs(hash(name)) % 1000
-    hue = 20 + (h % 980)
+    hue = 20 + (abs(hash(name)) % 980)
     _name_hues[name] = hue
     return hue
 
@@ -325,19 +429,10 @@ def _should_skip(entry):
             return True
     return False
 
-
-def _clamp(text, n=500):
-    text = str(text).replace("\n", " ").replace("\r", "")
-    if len(text) > n:
-        return text[:n - 1] + "~"
-    return text
-
 # ---------------------------------------------------------------------------
 # GUMP
 # ---------------------------------------------------------------------------
 def _draw_gump():
-    global _compact_mode
-
     p = PROFILES["compact"] if _compact_mode else PROFILES["expanded"]
     WIN_W        = p["WIN_W"]
     WIN_H        = p["WIN_H"]
@@ -352,17 +447,15 @@ def _draw_gump():
 
     COL_LEFT_X  = MARGIN
     COL_RIGHT_X = MARGIN + COL_W + 20
-
     toggle_label = "[ Expand ]" if _compact_mode else "[ Compact ]"
 
     gd = Gumps.CreateGump(True, True, False, False)
     Gumps.AddPage(gd, 0)
-
     Gumps.AddBackground(gd, 0, 0, WIN_W, WIN_H, 9270)
     Gumps.AddAlphaRegion(gd, 0, 0, WIN_W, WIN_H)
 
-    title_str = "[ MeesaJarJar`s UO Translator  >>  {} ]".format(TARGET_LANGUAGE)
-    Gumps.AddLabel(gd, MARGIN, 10, HUE_TITLE, title_str)
+    Gumps.AddLabel(gd, MARGIN, 10, HUE_TITLE,
+                   "[ MeesaJarJar`s UO Translator  >>  {} ]".format(TARGET_LANGUAGE))
 
     if not _compact_mode:
         Gumps.AddLabel(gd, COL_LEFT_X,  40, HUE_HEADER, "Original Message")
@@ -390,7 +483,6 @@ def _draw_gump():
     visible = visible[::-1]
 
     y = ROWS_Y_START
-
     if not visible:
         Gumps.AddLabel(gd, COL_LEFT_X, y, HUE_CACHE, "Waiting for chat...")
     else:
@@ -415,45 +507,38 @@ def _draw_gump():
 
             for li in range(max_lines):
                 yy = y + (li * ROW_H)
-
                 if li < len(wrap_o):
-                    line = wrap_o[li]
+                    ln = wrap_o[li]
                     if li == 0 and name_o:
                         Gumps.AddLabel(gd, COL_LEFT_X, yy, hue_o,
                                        str(name_o)[:NAME_CHARS] + ":")
-                        Gumps.AddLabel(gd, COL_LEFT_X + LABEL_OFFSET,
-                                       yy, HUE_ORIG, line)
+                        Gumps.AddLabel(gd, COL_LEFT_X + LABEL_OFFSET, yy, HUE_ORIG, ln)
                     else:
                         Gumps.AddLabel(gd,
                                        COL_LEFT_X + (LABEL_OFFSET if name_o else 0),
-                                       yy, HUE_ORIG, line)
-
+                                       yy, HUE_ORIG, ln)
                 if li < len(wrap_t):
-                    line = wrap_t[li]
+                    ln = wrap_t[li]
                     if li == 0 and name_t:
                         Gumps.AddLabel(gd, COL_RIGHT_X, yy, hue_t,
                                        str(name_t)[:NAME_CHARS] + "  :")
-                        Gumps.AddLabel(gd, COL_RIGHT_X + LABEL_OFFSET,
-                                       yy, HUE_TRANS, line)
+                        Gumps.AddLabel(gd, COL_RIGHT_X + LABEL_OFFSET, yy, HUE_TRANS, ln)
                     else:
                         Gumps.AddLabel(gd,
                                        COL_RIGHT_X + (LABEL_OFFSET if name_t else 0),
-                                       yy, HUE_TRANS, line)
+                                       yy, HUE_TRANS, ln)
 
             y += max_lines * ROW_H
 
     btn_y = WIN_H - 34
-
     Gumps.AddLabel(gd, MARGIN, btn_y + 6, HUE_CACHE,
-                   "Cache: {}  |  Rows: {}".format(
-                       len(_translation_cache), len(visible)))
+                   "Cache: {} disk / {} session  |  Rows: {}".format(
+                       len(_disk_cache), len(_runtime_cache), len(visible)))
 
     Gumps.AddButton(gd, WIN_W - 280, btn_y, 4017, 4019, BTN_TOGGLE, 1, 0)
     Gumps.AddLabel (gd, WIN_W - 245, btn_y + 6, HUE_BTN_TOG, toggle_label)
-
     Gumps.AddButton(gd, WIN_W - 180, btn_y, 4017, 4019, BTN_CLEAR, 1, 0)
     Gumps.AddLabel (gd, WIN_W - 145, btn_y + 6, HUE_BTN, "Clear")
-
     Gumps.AddButton(gd, WIN_W - 80,  btn_y, 4020, 4022, BTN_CLOSE, 1, 0)
     Gumps.AddLabel (gd, WIN_W - 45,  btn_y + 6, HUE_BTN_WARN, "Close")
 
@@ -465,13 +550,23 @@ def _draw_gump():
 # MAIN
 # ---------------------------------------------------------------------------
 def main():
-    global _last_journal_count, _display_rows, _compact_mode
+    global _last_journal_count, _display_rows, _compact_mode, _disk_cache
 
     Misc.SendMessage("[Translator] Starting...", SYSTEM_HUE)
     Player.ChatSay("Starting Meesa Translator.")
+
+    _disk_cache = _load_disk_cache()
+
+    # Pre-populate runtime cache from disk for TARGET_LANGUAGE
+    for msg, langs in _disk_cache.items():
+        if TARGET_LANGUAGE in langs:
+            _runtime_cache[msg] = langs[TARGET_LANGUAGE]
+    Misc.SendMessage(
+        "[Translator] {} '{}' entries ready from cache.".format(
+            len(_runtime_cache), TARGET_LANGUAGE), SYSTEM_HUE)
+
     seed = Journal.GetJournalEntry(-1)
     _last_journal_count = len(seed)
-
     _display_rows = []
     _draw_gump()
 
@@ -482,6 +577,7 @@ def main():
         gd = Gumps.GetGumpData(GUMP_ID)
         if gd and gd.buttonid > 0:
             if gd.buttonid == BTN_CLOSE:
+                _save_disk_cache()   # final flush on close
                 running = False
                 Gumps.CloseGump(GUMP_ID)
                 break
@@ -509,18 +605,11 @@ def main():
                     ctx.append(new_entries[j].Text)
 
             trans = _translate(entry.Text.strip(), ctx)
-
             display_trans = "{}: {}".format(speaker_name, trans) \
                             if speaker_name else trans
 
             _display_rows.append((display_orig, display_trans))
-
-            # ---------- HEAD MESSAGE ----------
-            # After the translation comes back, find the speaker in the world
-            # and pop the translated text above their head. Gracefully skips
-            # system messages (no name), out-of-range speakers, and errors.
             _show_head_message(speaker_name, trans)
-            # ----------------------------------
 
         max_keep = p["MAX_ROWS"] * 3
         if len(_display_rows) > max_keep:
